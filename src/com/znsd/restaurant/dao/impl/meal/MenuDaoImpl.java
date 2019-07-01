@@ -65,8 +65,9 @@ public class MenuDaoImpl extends DBUtils implements MenuDao {
 		Connection connection = DBUtils.getConnection();
 		PreparedStatement prepare = null;
 		ResultSet query = null;
+
 		String sql = "SELECT mealId,mealName,seriesName,mealPrice,mealImage,mealSummarize FROM meals,mealseries WHERE meals.mealSeriesId = mealseries.seriesId ";
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
+
 		if(menu.getMenuId() != 0){
 			sql = sql + " and mealId= "+ menu.getMenuId();
 		}
@@ -82,8 +83,9 @@ public class MenuDaoImpl extends DBUtils implements MenuDao {
 			query = prepare.executeQuery();
 			List<MenuBean> list = new ArrayList<MenuBean>();
 			while(query.next()){
-			//	list.add(new MenuBean(query.getInt(1),query.getString(2),query.getString(3).toString(),query.getDouble(4),query.getString(5),query.getString(6)));
+				list.add(new MenuBean(query.getInt(1),query.getString(2),query.getDouble(3),query.getString(4),query.getString(5),query.getString(6)));
 			}
+			System.out.println(list.toString());
 			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();

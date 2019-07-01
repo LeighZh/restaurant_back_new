@@ -173,6 +173,7 @@ public class UserServlet extends HttpServlet {
             e.printStackTrace();
         }
 	}
+
 	public void loginOut(HttpServletRequest request, HttpServletResponse response,UserService userServlet){
 		HttpSession session = request.getSession();
 		session.setAttribute("id",null);

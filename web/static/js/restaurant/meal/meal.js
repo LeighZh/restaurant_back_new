@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    //indexSeriesSelect();
     queryUserInfo();
 });
 var icon = "<i class='fa fa-times-circle'></i>";
@@ -22,9 +23,9 @@ function queryUserInfo() {
         // contentType: "application/json;charset=UTF-8",
         dataType: "json",
         data:{
-            "loginName" :  $('#userAccount').val(),
-            "createTime" : $('#userCreateTime').val(),
-            "money" : $('#userSpend').val(),
+            "id" :  $('#id').val(),
+            "name" : $('#name').val(),
+            "series" : $('#series').val(),
         },
         success:function (result) {
             console.log(result)
@@ -83,16 +84,6 @@ function indexTimeSelect(){
     timeSelectInfo += "<option value='"+(new Date("1 01," + today.getFullYear() + " 00:00:00")).format("yyyy-MM-dd hh:mm:ss")+"'>"+"一年内"+"</option>";
     timeSelectInfo += "<option value=0>"+"不限"+"</option>";
     $("#userCreateTime").append(timeSelectInfo);
-}
-function indexSpendSelect(){
-
-    var SpendSelectInfo = "";
-    SpendSelectInfo += "<option value='"+0+"'>"+"0"+"</option>";
-    SpendSelectInfo += "<option value='"+100+"'>"+"<= 100"+"</option>";
-    SpendSelectInfo += "<option value='"+1000+"'>"+"<= 1000"+"</option>";
-    SpendSelectInfo += "<option value='"+10000+"'>"+"<= 10000"+"</option>";
-    SpendSelectInfo += "<option value=0>"+"不限"+"</option>";
-    $("#userSpend").append(SpendSelectInfo);
 }
 function deleteUser(id) {
     swal({
@@ -279,25 +270,144 @@ function saveNewPassword() {
     }
 }
 
-Date.prototype.format = function(fmt) {
-    var o = {
-        "M+" : this.getMonth()+1,                 //月份
-        "d+" : this.getDate(),                    //日
-        "h+" : this.getHours(),                   //小时
-        "m+" : this.getMinutes(),                 //分
-        "s+" : this.getSeconds(),                 //秒
-        "q+" : Math.floor((this.getMonth()+3)/3), //季度
-        "S"  : this.getMilliseconds()             //毫秒
-    };
-    if(/(y+)/.test(fmt)) {
-        fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
-    }
-    for(var k in o) {
-        if(new RegExp("("+ k +")").test(fmt)){
-            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
-        }
-    }
-    return fmt;
+function showFileToUpload() {
+    resetUserInfoDialog();
+    $("#dialogTitle").html("新增菜品");
+    setProgress(0);
+
 }
+
+function setProgress(w) {
+    $('#progressBar').width(w + '%');
+    $('#progressBar').text(w + '%');
+    $("#showInfo").html("");
+}
+
+function showProgress() {
+    $('#progressBar').parent().show();
+}
+function hideProgress() {
+    $('#progressBar').parent().hide();
+}
+
+function getSize(size) {
+    var fileSize = '0KB';
+    if (size > 1024 * 1024) {
+        fileSize = (Math.round(size / (1024 * 1024))).toString() + 'MB';
+    } else {
+        fileSize = (Math.round(size / 1024)).toString() + 'KB';
+    }
+    return fileSize;
+}
+
+//上传成功后回调
+function uploadComplete(evt) {
+    $('#myModal5').modal('hide');
+    resetForm();
+    swal("上传成功！","", "success");
+    setProgress(0);
+};
+
+//上传失败回调
+function uploadFailed(evt) {
+    swal("上传失败！", evt.target.responseText, "error");
+}
+
+//终止上传
+function cancelUpload() {
+    xhr.abort();
+}
+
+//上传取消后回调
+function uploadCanceled(evt) {
+    swal("上传失败！", '上传取消,上传被用户取消或者浏览器断开连接:' + evt.target.responseText, "error");
+}
+
+function progressFunction(evt) {
+    var progressBar = document.getElementById("progressBar");
+    var percentageDiv = document.getElementById("percentage");
+    if (evt.lengthComputable) {
+        var completePercent = Math.round(evt.loaded / evt.total * 100)
+            + '%';
+        $('#progressBar').width(completePercent);
+        $('#progressBar').text(completePercent);
+
+        var time = $("#time");
+        var nt = new Date().getTime();     //获取当前时间
+        var pertime = (nt-ot)/1000;        //计算出上次调用该方法时到现在的时间差，单位为s
+        ot = new Date().getTime();          //重新赋值时间，用于下次计算
+
+        var perload = evt.loaded - oloaded; //计算该分段上传的文件大小，单位b
+        oloaded = evt.loaded;               //重新赋值已上传文件大小
+
+        //上传速度计算
+        var speed = perload/pertime;//单位b/s
+        var bspeed = speed;
+        var units = 'b/s';//单位名称
+        if(speed/1024>1){
+            speed = speed/1024;
+            units = 'k/s';
+        }
+        if(speed/1024>1){
+            speed = speed/1024;
+            units = 'M/s';
+        }
+        speed = speed.toFixed(1);
+        //剩余时间
+        var resttime = ((evt.total-evt.loaded)/bspeed).toFixed(1);
+        $("#showInfo").html(speed+units+'，剩余时间：'+resttime+'s');
+    }
+}
+
+//上传文件类
+function uploadFile(id) {
+    //alert($('#uploadFile').val());
+    if($('#uploadFile').val()=='')
+    {
+        swal('未选择文件','请选择文件');
+        return ;
+    }
+    var formData = new FormData();
+    formData.append('file', $('#uploadFile')[0].files[0]);
+    var length = getSize($('#uploadFile')[0].files[0].size);
+    if($('#uploadFile')[0].files[0].size >= 1073741824*5)//后面的5表示1G*5=5G 上限为5G 可修改
+    {
+        swal("上传失败！", "上传文件过大！最大不能超过1GB", "error");
+        return ;
+    }
+
+    var FileName = $('#uploadFile')[0].files[0].name;
+    $.ajax({
+        type: "POST",
+        url: "/myFile/checkFileName",
+        dataType: "json",
+        data: {
+            name: FileName,
+        },
+        success:function (result){
+            //if(result.flag == "1"){
+            showProgress();
+            var uploadGo = "/myFile/uploadMyFile?flag="+flag;
+            xhr = new XMLHttpRequest();
+            xhr.open("post", uploadGo, true);
+            xhr.onloadstart = function() {
+                ot = new Date().getTime();   //设置上传开始时间
+                oloaded = 0;//已上传的文件大小为0
+            };
+            xhr.upload.addEventListener("progress", progressFunction, false);
+            xhr.addEventListener("load", uploadComplete, false);
+            xhr.addEventListener("error", uploadFailed, false);
+            xhr.addEventListener("abort", uploadCanceled, false);
+            xhr.send(formData);
+            queryMyFileInfo();
+            //swal("上传成功！", "", "success");
+            //}else{
+            //swal("上传失败！", result.message, "error");
+            //}
+        }
+    })
+
+}
+
 
 

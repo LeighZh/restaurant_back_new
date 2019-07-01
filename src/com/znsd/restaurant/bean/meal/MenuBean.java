@@ -25,6 +25,16 @@ public class MenuBean {
 	public MenuBean() {
 		super();
 	}
+
+	public MenuBean(int mealId, String mealName, double mealPrice, String seriesName, String mealImage, String mealSummarize) {
+		this.mealId = mealId;
+		this.mealName = mealName;
+		this.mealPrice = mealPrice;
+		this.seriesName = seriesName;
+		this.mealImage = mealImage;
+		this.mealSummarize = mealSummarize;
+	}
+
 	public MenuBean(String mealName, double mealPrice, String seriesName, String mealDescription) {
 		super();
 		this.mealName = mealName;
@@ -32,6 +42,13 @@ public class MenuBean {
 		this.seriesName = seriesName;
 		this.mealDescription = mealDescription;
 	}
+
+	public MenuBean(int mealId, String mealName, int mealSeriesId) {
+		this.mealId = mealId;
+		this.mealName = mealName;
+		this.mealSeriesId = mealSeriesId;
+	}
+
 	public String getDescribe() {
 		return mealDescription;
 	}
