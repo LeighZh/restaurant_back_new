@@ -1,6 +1,4 @@
 $(document).ready(function () {
-    indexTimeSelect();
-    indexSpendSelect();
     queryUserInfo();
 });
 var icon = "<i class='fa fa-times-circle'></i>";
@@ -20,7 +18,7 @@ function resetUserInfoDialog() {
 function queryUserInfo() {
     $.ajax({
         type: "POST",
-        url: "/MenuServlet?judge=getUsers",
+        url: "/MenuServlet?judge=query",
         // contentType: "application/json;charset=UTF-8",
         dataType: "json",
         data:{

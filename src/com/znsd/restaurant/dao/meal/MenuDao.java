@@ -9,14 +9,12 @@ public interface MenuDao {
 
 	public void delete(String name);
 
-	public List<MenuBean> query(int start, int pageSize);
+	public List<MenuBean> query(MenuBean menu);
 
 	public void mod(String name, int id);
 
 	public String select(String line, String pageSize, int first);
 
 	public int count();
-
-	//public void Typealter(String usName, String id);
 
 }

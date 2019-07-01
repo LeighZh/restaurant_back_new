@@ -61,24 +61,36 @@ public class MenuDaoImpl extends DBUtils implements MenuDao {
 		}
 	}
 	@Override
-	public List<MenuBean> query(int start,int pageSize) {
-		Connection connection=DBUtils.getConnection();
-		String sql="SELECT mealId,mealName,seriesName,mealPrice,mealSeriesId,mealSummarize,mealDescription FROM meals,mealseries WHERE meals.mealSeriesId = mealseries.seriesId  ORDER BY meals.mealId LIMIT ?,?";
-		PreparedStatement prepare=null;
-		List<MenuBean> list=new ArrayList<MenuBean>();
+	public List<MenuBean> query(MenuBean menu){
+		Connection connection = DBUtils.getConnection();
+		PreparedStatement prepare = null;
+		ResultSet query = null;
+		String sql = "SELECT mealId,mealName,seriesName,mealPrice,mealImage,mealSummarize FROM meals,mealseries WHERE meals.mealSeriesId = mealseries.seriesId ";
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
+		if(menu.getMenuId() != 0){
+			sql = sql + " and mealId= "+ menu.getMenuId();
+		}
+		if(menu.getMenuName() != null ){
+			sql = sql +  " and mealName = " +  "'" + menu.getMenuName()+  "'";
+		}
+		if(menu.getVegetableName() != null ){
+			sql = sql +  " and seriesName = '" + menu.getVegetableName() + "'";
+		}
+		System.out.println(sql);
 		try {
-			prepare=connection.prepareStatement(sql);
-			prepare.setInt(1, start);
-			prepare.setInt(2, pageSize);
-			ResultSet res=prepare.executeQuery();
-			while(res.next()){
-			//	list.add(new MenuBean(res.getInt(1),res.getString(2),res.getDouble(3),res.getString(14),res.getString(5),res.getInt(6),res.getInt(7),res.getInt(8),res.getInt(9),res.getTimestamp(10),res.getString(11),res.getString(13)));
+			prepare = connection.prepareStatement(sql);
+			query = prepare.executeQuery();
+			List<MenuBean> list = new ArrayList<MenuBean>();
+			while(query.next()){
+			//	list.add(new MenuBean(query.getInt(1),query.getString(2),query.getString(3).toString(),query.getDouble(4),query.getString(5),query.getString(6)));
 			}
+			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return list;
+		return null;
 	}
+
 	@Override
 	public void mod(String name,int id) {
 		Connection con = getConnection();
