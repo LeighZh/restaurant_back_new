@@ -69,58 +69,71 @@ public class MenuBean {
 		this.mealSeriesId = mealSeriesId;
 	}
 
-	public String getDescribe() {
-		return mealDescription;
-	}
-	public void setDescribe(String mealDescription) {
-		this.mealDescription = mealDescription;
-	}
-	public String getMealSummarize() {
-		return mealSummarize;
-	}
-	public void setMealSummarize(String mealSummarize) {
-		this.mealSummarize = mealSummarize;
-	}
-	public int getVegetableId() {
-		return mealSeriesId;
-	}
-	public void setVegetableId(int mealSeriesId) {
-		this.mealSeriesId = mealSeriesId;
-	}
-	public int getMenuId() {
+	public int getMealId() {
 		return mealId;
 	}
-	public void setMenuId(int mealId) {
+
+	public void setMealId(int mealId) {
 		this.mealId = mealId;
 	}
-	public String getMenuName() {
+
+	public String getMealName() {
 		return mealName;
 	}
-	public void setMenuName(String mealName) {
+
+	public void setMealName(String mealName) {
 		this.mealName = mealName;
 	}
-	public double getPrice() {
+
+	public double getMealPrice() {
 		return mealPrice;
 	}
-	public void setPrice(double mealPrice) {
-		this.mealPrice =mealPrice;
+
+	public void setMealPrice(double mealPrice) {
+		this.mealPrice = mealPrice;
 	}
-	public String getVegetableName() {
+
+	public int getMealSeriesId() {
+		return mealSeriesId;
+	}
+
+	public void setMealSeriesId(int mealSeriesId) {
+		this.mealSeriesId = mealSeriesId;
+	}
+
+	public String getSeriesName() {
 		return seriesName;
 	}
-	public void setVegetableName(String seriesName) {
+
+	public void setSeriesName(String seriesName) {
 		this.seriesName = seriesName;
 	}
-	public String getPicture() {
+
+	public String getMealImage() {
 		return mealImage;
 	}
-	public void setPicture(String mealImage) {
+
+	public void setMealImage(String mealImage) {
 		this.mealImage = mealImage;
 	}
 
+	public String getMealDescription() {
+		return mealDescription;
+	}
 
+	public void setMealDescription(String mealDescription) {
+		this.mealDescription = mealDescription;
+	}
 
-//	public MenuBean(int menuId, String menuName, double price, String vegetableName, String picture, int userCount, int good,
+	public String getMealSummarize() {
+		return mealSummarize;
+	}
+
+	public void setMealSummarize(String mealSummarize) {
+		this.mealSummarize = mealSummarize;
+	}
+
+	//	public MenuBean(int menuId, String menuName, double price, String vegetableName, String picture, int userCount, int good,
 //			int general, int bad, Date addTime,String menuType,String describe) {
 //		super();
 //		this.menuId = menuId;
@@ -172,9 +185,18 @@ public class MenuBean {
 //	public void setAddTime(Date addTime) {
 //		this.addTime = addTime;
 //	}
+
 	@Override
 	public String toString() {
-		return "Menu [mealId=" + mealId + ", mealName=" + mealName + ", mealPrice=" + mealPrice + ", mealSeriesId=" + seriesName
-				+ ", mealImage=" + mealImage +  ", mealDescription=" + mealDescription+", mealSummarize="+ mealSummarize+"]";
+		return "MenuBean{" +
+				"mealId=" + mealId +
+				", mealName='" + mealName + '\'' +
+				", mealPrice=" + mealPrice +
+				", mealSeriesId=" + mealSeriesId +
+				", seriesName='" + seriesName + '\'' +
+				", mealImage='" + mealImage + '\'' +
+				", mealDescription='" + mealDescription + '\'' +
+				", mealSummarize='" + mealSummarize + '\'' +
+				'}';
 	}
 }

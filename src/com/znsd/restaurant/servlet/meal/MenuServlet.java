@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.znsd.restaurant.bean.meal.MenuBean;
+import com.znsd.restaurant.bean.system.UserBean;
 import com.znsd.restaurant.servers.impl.meal.MenuServersImpl;
 import com.znsd.restaurant.servers.meal.MenuServers;
 
@@ -47,6 +48,7 @@ public class MenuServlet extends HttpServlet {
 		String mealPrice = (request.getParameter("mealPrice") == null || request.getParameter("mealPrice").equals("")) ? "0" : request.getParameter("mealPrice");
 		String mealDescription = request.getParameter("mealDescription");
 
+		System.out.println(new MenuBean(Integer.parseInt(mealId),mealName,Double.parseDouble(mealPrice),Integer.parseInt(seriesId),mealDescription,mealSummarize).toString());
 		//若用户id为空，为保存
 		if (Integer.parseInt(mealId) == 0){
 			System.out.println("更新用户");
@@ -67,8 +69,13 @@ public class MenuServlet extends HttpServlet {
 	public void getMenus(HttpServletRequest request, HttpServletResponse response,MenuServers menuServlet){
 		String mealId = (request.getParameter("id") == null || request.getParameter("id").equals("") ) ? "0" : request.getParameter("id");
 		String mealName = request.getParameter("name") == null ? null : request.getParameter("name").equals("") ? null : request.getParameter("name");
-		String seriesName = request.getParameter("series") == null ? "0" : request.getParameter("series").equals("") ? "0" : request.getParameter("series");
-
+		String seriesName = (request.getParameter("series") == null ||request.getParameter("series").equals("")) ?  "0" : request.getParameter("series");
+		System.out.println(mealId);
+		System.out.println(mealName);
+		System.out.println(seriesName);
+		MenuBean a = (new MenuBean(Integer.parseInt(mealId),mealName,Integer.parseInt(seriesName)));
+		System.out.println(a.toString());
+		System.out.println("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
 		List<MenuBean> query =menuServlet.query(new MenuBean(Integer.parseInt(mealId),mealName,Integer.parseInt(seriesName)));
 
 		System.out.println(query.toString());

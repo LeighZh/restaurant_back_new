@@ -18,16 +18,17 @@ public class MenuDaoImpl extends DBUtils implements MenuDao {
 		Connection connection = DBUtils.getConnection();
 		PreparedStatement prepare = null;
 		boolean res = false;
-		System.out.println(ben.toString());
-        System.out.println(ben.getVegetableId());
+
 		try {
 			prepare = connection.prepareStatement("insert into  meals (mealSeriesId,mealName,mealSummarize,mealDescription,mealPrice,mealImage) values(?,?,?,?,?,?)");
-			prepare.setInt(1, ben.getVegetableId());
-			prepare.setString(2, ben.getMenuName());
+			prepare.setInt(1, ben.getMealSeriesId());
+			prepare.setString(2, ben.getMealName());
 			prepare.setString(3, ben.getMealSummarize());
-			prepare.setString(4, ben.getDescribe());
-			prepare.setDouble(5,ben.getPrice());
-			prepare.setString(6,ben.getPicture());
+			prepare.setString(4, ben.getMealDescription());
+			prepare.setString(4, ben.getMealDescription());
+			prepare.setString(4, ben.getMealDescription());
+			prepare.setDouble(5,ben.getMealPrice());
+			prepare.setString(6,ben.getMealImage());
 			prepare.execute();
 			res = true;
 		} catch (SQLException e) {
@@ -40,17 +41,17 @@ public class MenuDaoImpl extends DBUtils implements MenuDao {
 	public Boolean update(MenuBean ben) {
 		Connection connection = DBUtils.getConnection();
 		PreparedStatement prepare = null;
-        System.out.println(ben.toString());
-        System.out.println(ben.getVegetableId());
 		boolean res = false;
 		try {
 			prepare = connection.prepareStatement(" update  meals set mealSeriesId = ?, mealName = ? ,mealSummarize = ?,mealDescription = ?,mealPrice = ?,mealImage = ?");
-			prepare.setInt(1, ben.getVegetableId());
-			prepare.setString(2, ben.getMenuName());
+			prepare.setInt(1, ben.getMealSeriesId());
+			prepare.setString(2, ben.getMealName());
 			prepare.setString(3, ben.getMealSummarize());
-			prepare.setString(4, ben.getDescribe());
-			prepare.setDouble(5,ben.getPrice());
-			prepare.setString(6,ben.getPicture());
+			prepare.setString(4, ben.getMealDescription());
+			prepare.setString(4, ben.getMealDescription());
+			prepare.setString(4, ben.getMealDescription());
+			prepare.setDouble(5,ben.getMealPrice());
+			prepare.setString(6,ben.getMealImage());
 			prepare.execute();
 
 			prepare.execute();
@@ -85,19 +86,17 @@ public class MenuDaoImpl extends DBUtils implements MenuDao {
 		Connection connection = DBUtils.getConnection();
 		PreparedStatement prepare = null;
 		ResultSet query = null;
-
 		String sql = "SELECT mealId,mealName,mealPrice,seriesId,seriesName,mealImage,mealDescription,mealSummarize FROM meals,mealseries WHERE meals.mealSeriesId = mealseries.seriesId ";
 
-		if(menu.getMenuId() != 0){
-			sql = sql + " and mealId= "+ menu.getMenuId();
+		if(menu.getMealId() != 0){
+			sql = sql + " and mealId= "+ menu.getMealImage();
 		}
-		if(menu.getMenuName() != null ){
-			sql = sql +  " and mealName = " +  "'" + menu.getMenuName()+  "'";
+		if(menu.getMealName() != null ){
+			sql = sql +  " and mealName = " +  "'" + menu.getMealName()+  "'";
 		}
-		if(menu.getVegetableId() != 0 ){
-			sql = sql +  " and seriesId = '" + menu.getVegetableId() + "'";
+		if(menu.getMealSeriesId() != 0 ){
+			sql = sql +  " and seriesId = '" + menu.getMealSeriesId() + "'";
 		}
-		System.out.println(sql);
 		try {
 			prepare = connection.prepareStatement(sql);
 			query = prepare.executeQuery();
