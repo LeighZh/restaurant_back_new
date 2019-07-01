@@ -30,6 +30,12 @@ public class UserServiceImpl implements UserService{
 	public boolean updata(UserBean user) {
 		return userDao.updata(user);
 	}
+
+	@Override
+	public boolean updataAdmin(UserBean user) {
+		return userDao.updateAdmin(user);
+	}
+
 	@Override
 	public boolean delete(int id) {
 		return userDao.delete(id);
@@ -40,7 +46,12 @@ public class UserServiceImpl implements UserService{
         return userDao.insert(user);
     }
 
-    @Override
+	@Override
+	public boolean insertAdmin(UserBean user) {
+		return userDao.insertAdmin(user);
+	}
+
+	@Override
 	public UserBean afterRegister(String name, String password) {
 		return userDao.afterRegister(name, password);
 	}
@@ -77,5 +88,10 @@ public class UserServiceImpl implements UserService{
 	
 	public int likeAfterCount(String name){
 		return userDao.likeAfterCount(name);
+	}
+
+	@Override
+	public Boolean resetAdminPassword(int id, String password) {
+		return userDao.resetAdminPassword(id,password);
 	}
 }

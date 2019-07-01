@@ -70,6 +70,8 @@ public class UserBean {
 		this.userName = userName;
 	}
 
+
+
 	public String getRole() {
 		return role;
 	}

@@ -107,8 +107,8 @@ function showEditUser(id) {
     resetUserInfoDialog();
     if(id!=''){
         $("#dialogTitle").html("编辑用户")
-        // $("#dialogUserAccount").attr("readonly",true)
-        $("#dialogUserId").val(id);
+         $("#dialogUserAccount").attr("readonly",true)
+        $("#dialogUserAccount").val(id);
 
         $.ajax({
             type: "POST",
@@ -123,17 +123,15 @@ function showEditUser(id) {
                 //result = jQuery.parseJSON(result);
                 //console.log(result)
                 if(result.length >= 0){
-                    $("#dialogUserAccount").val(result[0].userName)
-                    $("#dialogUserName").val(result[0].trueName)
-                    $("#dialogUserPhone").val(result[0].phone)
-                    $("#dialogUserEmail").val(result[0].email)
-                    $("#dialogUserAddress").val(result[0].address)
+                    $("#dialogUserAccount").val(result[0].userId)
+                    $("#dialogUserName").val(result[0].userName)
+                    $("#dialogUserRole").val(result[0].role)
                 }
 
             }
         })
     }else{
-        //$("#dialogUserAccount").attr("readonly",false)
+        $("#dialogUserAccount").attr("readonly",true)
         $("#dialogTitle").html("添加用户")
     }
 
@@ -142,39 +140,27 @@ function showEditUser(id) {
 function saveOrUpdateUserInfo() {
     if($("#dialogUserInfo").validate({
         rules: {
-            dialogUserAccount: {
+            dialogUserName: {
                 required: true,
                 maxlength: 32
-            },
-            dialogUserPhone: {
-                required: true,
-                maxlength: 11
             }
         },
         messages: {
-            dialogUserAccount: {
+            dialogUserNamet: {
                 required: icon + "登录名不能为空",
                 minlength: icon + "登录名最长为32"
-            },
-            dialogUserPhone: {
-                required: icon + "电话号码不能为空",
-                equalTo: icon + "电话号码最长为11"
             }
         }
     }).form()){
         $.ajax({
-
             type: "POST",
-            url: "/userServlet?judge=saveOrUpdateUser",
+            url: "/userServlet?judge=saveOrUpdateAdmin",
             dataType: "json",
             //contentType: "application/json;charset=UTF-8",
             data:{
-                "id" : $("#dialogUserId").val(),
-                "loginName" : $("#dialogUserAccount").val(),
-                "trueName" : $("#dialogUserName").val(),
-                "phone" : $("#dialogUserPhone").val(),
-                "email" : $("#dialogUserEmail").val(),
-                "address" : $("#dialogUserAddress").val()
+                "id" : $("#dialogUserAccount").val(),
+                "name" : $("#dialogUserName").val(),
+                "role" : $("#dialogUserRole").val()
             },
             success:function (result){
                 if(result){
@@ -229,12 +215,12 @@ function saveNewPassword() {
     }).form()) {
         $.ajax({
             type: "POST",
-            url: "/userServlet?judge=resetUserPassword",
+            url: "/userServlet?judge=resetAdminPassword",
             // contentType: "application/json;charset=UTF-8",
             dataType: "json",
             data:{
                 "id" : $("#resetPasswordUserId").val(),
-                "newPassword" : $("#newPassword").val()
+                "password" : $("#newPassword").val()
             },
             success:function (result){
                 if(result){

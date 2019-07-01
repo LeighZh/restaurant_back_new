@@ -14,9 +14,13 @@ public interface UserDao {
 
 	public boolean updata(UserBean user);
 
+	public boolean updateAdmin(UserBean user);
+
 	public boolean delete(int id);
 
 	public boolean insert(UserBean user);
+
+	public boolean insertAdmin(UserBean user);
 
 	public UserBean afterRegister(String name, String password);
 
@@ -35,4 +39,6 @@ public interface UserDao {
 	public int likeAfterCount(String name);
 
 	public List<UserBean> getAdmins(UserBean user);
+
+	public Boolean resetAdminPassword(int id,String password);
 }

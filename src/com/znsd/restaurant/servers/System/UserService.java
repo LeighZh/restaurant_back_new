@@ -14,9 +14,13 @@ public interface UserService {
 
 	public boolean updata(UserBean user);
 
+	public boolean updataAdmin(UserBean user);
+
 	public boolean delete(int id);
 
     public boolean insert(UserBean user);
+
+	public boolean insertAdmin(UserBean user);
 
 	public UserBean afterRegister(String name, String password);
 
@@ -34,4 +38,6 @@ public interface UserService {
 	public int afterUserCount();
 	
 	public int likeAfterCount(String name);
+
+	public Boolean resetAdminPassword(int id,String password);
 }

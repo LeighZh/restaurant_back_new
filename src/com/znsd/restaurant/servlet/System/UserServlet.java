@@ -3,6 +3,7 @@ package com.znsd.restaurant.servlet.System;
 import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.znsd.restaurant.bean.order.RecordBean;
 import com.znsd.restaurant.bean.system.UserBean;
 import com.znsd.restaurant.servers.System.UserService;
@@ -45,6 +46,10 @@ public class UserServlet extends HttpServlet {
 			this.resetUserPassword(request,response,userServlet);
 		}else if(judge.equals("getAdmins")){
 			this.getAdmins(request,response,userServlet);
+		}else if(judge.equals("resetAdminPassword")){
+			this.resetAdminPassword(request,response,userServlet);
+		}else if(judge.equals("saveOrUpdateAdmin")){
+			this.saveOrUpdateAdmin(request,response,userServlet);
 		}
 	}
 
@@ -244,6 +249,53 @@ public class UserServlet extends HttpServlet {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void resetAdminPassword(HttpServletRequest request, HttpServletResponse response,UserService userServlet){
+		String name = request.getParameter("id");
+		String password = request.getParameter("password");
+		Boolean res = userServlet.resetAdminPassword(Integer.parseInt(name), password);
+		PrintWriter out;
+
+		try {
+			System.out.println(res);
+			out = response.getWriter();
+			out.print(res);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public Boolean saveOrUpdateAdmin(HttpServletRequest request, HttpServletResponse response,UserService userServlet) {
+		String id = request.getParameter("id");
+		String name = request.getParameter("name");
+		String role = request.getParameter("role");
+		Boolean res = false;
+		//若用户id为空，为保存
+		if (Integer.parseInt(id) == 0) {
+			System.out.println("更新用户");
+			//若当前登录名已经存在，则抛出用户已存在的异常
+			System.out.println(userServlet.getUserByLoginName(name).size());
+			if (userServlet.getUserByLoginName(name).size() == 0) {
+				System.out.println("更新用户");
+				res = userServlet.insertAdmin(new UserBean(Integer.parseInt(id), name, role));
+			}
+		} else {
+			//不是新用户，进行用户更新
+			System.out.println("修改用户");
+			res = userServlet.updataAdmin(new UserBean(Integer.parseInt(id), name, role));
+		}
+		PrintWriter out;
+		try {
+			System.out.println(res);
+			out = response.getWriter();
+			out.print(res);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return res;
 	}
 }
 

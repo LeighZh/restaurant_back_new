@@ -138,7 +138,26 @@ public class UserDaoImpl implements UserDao {
         return res;
     }
 
-	
+	@Override
+	public boolean updateAdmin(UserBean user) {
+		Connection connection = DBUtils.getConnection();
+		PreparedStatement prepare = null;
+		boolean res = false;
+		try {
+			prepare = connection.prepareStatement("UPDATE admin SET loginName = ?,role = ?  WHERE id= ?");
+			prepare.setString(1, user.getUserName());
+			prepare.setString(2, user.getRole());
+			prepare.setInt(3, user.getUserId());
+
+			prepare.execute();
+			res = true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return res;
+	}
+
+
 	public boolean delete(int id){
 		Connection connection = DBUtils.getConnection();
 		PreparedStatement prepare = null;
@@ -175,7 +194,24 @@ public class UserDaoImpl implements UserDao {
         return res;
     }
 
-    public UserBean afterRegister(String name,String password){
+	@Override
+	public boolean insertAdmin(UserBean user) {
+		Connection connection = DBUtils.getConnection();
+		PreparedStatement prepare = null;
+		boolean res = false;
+		try {
+			prepare = connection.prepareStatement("insert into  admin (loginName,role) values(?,?)");
+			prepare.setString(1, user.getUserName());
+			prepare.setString(2, user.getRole());
+			prepare.execute();
+			res = true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return res;
+	}
+
+	public UserBean afterRegister(String name,String password){
 		Connection connection = DBUtils.getConnection();
 		PreparedStatement prepare = null;
 		ResultSet query = null;
@@ -422,4 +458,21 @@ public class UserDaoImpl implements UserDao {
         }
         return null;
     }
+
+	@Override
+	public Boolean resetAdminPassword(int id, String password) {
+		Connection connection = DBUtils.getConnection();
+		PreparedStatement prepare = null;
+		Boolean res = false;
+		try {
+			prepare = connection.prepareStatement("UPDATE admin SET loginPwd = ? WHERE id=?");
+			prepare.setString(1, password);
+			prepare.setInt(2,id);
+			prepare.execute();
+			res = true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return res;
+	}
 }
