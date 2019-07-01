@@ -92,7 +92,6 @@ function update(id) {
     $("#dialogEditAuthId").val(id);
 }
 function saveSubjectInfo() {
-    if(validform().form()) {
         $.ajax({
             type: "POST",
             url: "/CookingServlet?select=add",
@@ -113,7 +112,7 @@ function saveSubjectInfo() {
                 }
             }
         });
-    }
+
 }
 function saveEditSubjectInfo() {
         $.ajax({
