@@ -7,7 +7,7 @@ public class MenuBean {
 	private int mealId;//菜品id
 	private String mealName;//菜品名称
 	private double mealPrice;//价格
-	private int mealSeriesId;//菜系id
+	public int mealSeriesId;//菜系id
 	private String seriesName;//菜系名称
 	private String mealImage;//图片地址
 	private String mealDescription;//描述
@@ -24,6 +24,26 @@ public class MenuBean {
 	}
 	public MenuBean() {
 		super();
+	}
+
+	public MenuBean(int mealId, String mealName, double mealPrice, int mealSeriesId, String seriesName, String mealImage, String mealDescription, String mealSummarize) {
+		this.mealId = mealId;
+		this.mealName = mealName;
+		this.mealPrice = mealPrice;
+		this.mealSeriesId = mealSeriesId;
+		this.seriesName = seriesName;
+		this.mealImage = mealImage;
+		this.mealDescription = mealDescription;
+		this.mealSummarize = mealSummarize;
+	}
+
+	public MenuBean(int mealId, String mealName, double mealPrice, int mealSeriesId, String mealDescription, String mealSummarize) {
+		this.mealId = mealId;
+		this.mealName = mealName;
+		this.mealPrice = mealPrice;
+		this.mealSeriesId = mealSeriesId;
+		this.mealDescription = mealDescription;
+		this.mealSummarize = mealSummarize;
 	}
 
 	public MenuBean(int mealId, String mealName, double mealPrice, String seriesName, String mealImage, String mealSummarize) {

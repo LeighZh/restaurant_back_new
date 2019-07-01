@@ -14,51 +14,71 @@ import com.znsd.restaurant.dao.meal.MenuDao;
 public class MenuDaoImpl extends DBUtils implements MenuDao {
 
 	@Override
-	public String add(MenuBean ben) {
-		// TODO Auto-generated method stub
+	public Boolean insert(MenuBean ben) {
 		Connection connection = DBUtils.getConnection();
-		PreparedStatement pre=null;
-		String sql2="select seriesId from mealseries where seriesName=?";
-		String sql="insert into menu(mealId,mealName,mealPrice,mealSeriesId,mealImage,mealDescription,mealSummarize) values(?,?,?,?,'img/3.jpg',?,?)";
+		PreparedStatement prepare = null;
+		boolean res = false;
+		System.out.println(ben.toString());
+        System.out.println(ben.getVegetableId());
 		try {
-			pre=connection.prepareStatement(sql2);
-			pre.setString(1,ben.getVegetableName());
-			ResultSet res=pre.executeQuery();
-			int name=0;
-			while(res.next()){
-				System.out.println(res.getInt(1)+"..0.0...");
-				name=res.getInt(1);
-			}
-			pre=connection.prepareStatement(sql);
-			pre.setInt(1,ben.getMenuId());
-			pre.setString(2,ben.getMenuName());
-			pre.setDouble(3,ben.getPrice());
-			pre.setInt(4,name);
-			pre.setString(5,ben.getDescribe());
-			pre.setString(6,ben.getMealSummarize());
-			pre.execute();
+			prepare = connection.prepareStatement("insert into  meals (mealSeriesId,mealName,mealSummarize,mealDescription,mealPrice,mealImage) values(?,?,?,?,?,?)");
+			prepare.setInt(1, ben.getVegetableId());
+			prepare.setString(2, ben.getMenuName());
+			prepare.setString(3, ben.getMealSummarize());
+			prepare.setString(4, ben.getDescribe());
+			prepare.setDouble(5,ben.getPrice());
+			prepare.setString(6,ben.getPicture());
+			prepare.execute();
+			res = true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			System.out.println("报错");
+			e.printStackTrace();
 		}
-		return null;
+		return res;
 	}
 
 	@Override
-	public void delete(String name) {
+	public Boolean update(MenuBean ben) {
+		Connection connection = DBUtils.getConnection();
+		PreparedStatement prepare = null;
+        System.out.println(ben.toString());
+        System.out.println(ben.getVegetableId());
+		boolean res = false;
+		try {
+			prepare = connection.prepareStatement(" update  meals set mealSeriesId = ?, mealName = ? ,mealSummarize = ?,mealDescription = ?,mealPrice = ?,mealImage = ?");
+			prepare.setInt(1, ben.getVegetableId());
+			prepare.setString(2, ben.getMenuName());
+			prepare.setString(3, ben.getMealSummarize());
+			prepare.setString(4, ben.getDescribe());
+			prepare.setDouble(5,ben.getPrice());
+			prepare.setString(6,ben.getPicture());
+			prepare.execute();
+
+			prepare.execute();
+			res = true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return res;
+	}
+
+	@Override
+	public Boolean delete(int id) {
 		// TODO Auto-generated method stub
 		Connection con=DBUtils.getConnection();
-		String 	sql="delete from meals where mealId in(?)";
+		String 	sql="delete from meals where mealId  = ?";
 		PreparedStatement pre=null;
+		Boolean res = false;
 		try {
 			pre=con.prepareStatement(sql);
-			pre.setString(1,name);
-			System.out.println(name);
+			pre.setInt(1,id);
 			pre.execute();
+			res = true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			res = false;
 		}
+		return res;
 	}
 	@Override
 	public List<MenuBean> query(MenuBean menu){
@@ -66,7 +86,7 @@ public class MenuDaoImpl extends DBUtils implements MenuDao {
 		PreparedStatement prepare = null;
 		ResultSet query = null;
 
-		String sql = "SELECT mealId,mealName,seriesName,mealPrice,mealImage,mealSummarize FROM meals,mealseries WHERE meals.mealSeriesId = mealseries.seriesId ";
+		String sql = "SELECT mealId,mealName,mealPrice,seriesId,seriesName,mealImage,mealDescription,mealSummarize FROM meals,mealseries WHERE meals.mealSeriesId = mealseries.seriesId ";
 
 		if(menu.getMenuId() != 0){
 			sql = sql + " and mealId= "+ menu.getMenuId();
@@ -74,8 +94,8 @@ public class MenuDaoImpl extends DBUtils implements MenuDao {
 		if(menu.getMenuName() != null ){
 			sql = sql +  " and mealName = " +  "'" + menu.getMenuName()+  "'";
 		}
-		if(menu.getVegetableName() != null ){
-			sql = sql +  " and seriesName = '" + menu.getVegetableName() + "'";
+		if(menu.getVegetableId() != 0 ){
+			sql = sql +  " and seriesId = '" + menu.getVegetableId() + "'";
 		}
 		System.out.println(sql);
 		try {
@@ -83,7 +103,8 @@ public class MenuDaoImpl extends DBUtils implements MenuDao {
 			query = prepare.executeQuery();
 			List<MenuBean> list = new ArrayList<MenuBean>();
 			while(query.next()){
-				list.add(new MenuBean(query.getInt(1),query.getString(2),query.getDouble(3),query.getString(4),query.getString(5),query.getString(6)));
+				//int mealId, String mealName, double mealPrice, int mealSeriesId, String seriesName, String mealImage, String mealDescription, String mealSummarize
+				list.add(new MenuBean(query.getInt(1),query.getString(2),query.getDouble(3),query.getInt(4),query.getString(5),query.getString(6),query.getString(7),query.getString(8)));
 			}
 			System.out.println(list.toString());
 			return list;
@@ -92,99 +113,5 @@ public class MenuDaoImpl extends DBUtils implements MenuDao {
 		}
 		return null;
 	}
-
-	@Override
-	public void mod(String name,int id) {
-		Connection con = getConnection();
-		String sql="select vegetableId from vegetabletype where vegetableName=?";
-		String sql2="update menu set vegetableId=? where menuId=?";
-		PreparedStatement pr =null;
-		ResultSet ex = null;
-		int id2=666;
-		try {
-			pr=con.prepareStatement(sql);
-			pr.setString(1,name);
-			ex=pr.executeQuery();
-			while(ex.next()){
-				id2=ex.getInt(1);
-			}
-			pr=con.prepareStatement(sql2);
-			pr.setInt(1,id2);
-			pr.setInt(2,id);
-			pr.execute();
-			System.out.println("成功");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	@Override
-	public String select(String line,String pageSize,int first) {
-		Connection con = getConnection();
-		PreparedStatement pr =null;
-		ResultSet ex = null;
-		String[] st = line.split(",");
-		String tab = "[";
-		try {
-			pr= con.prepareStatement("SELECT mealId,mealName,seriesName,mealPrice,mealSeriesId,mealSummarize,mealDescription FROM meals,mealseries WHERE meals.mealSeriesId = mealseries.seriesId  ORDER BY meals.mealId LIMIT ?,?");
-			pr.setObject(1,first);
-			pr.setObject(2, Integer.parseInt(pageSize));
-			ex = pr.executeQuery();
-			while(ex.next()){
-				tab+="{\""+st[0]+"\":\""+ex.getObject(1)+"\",\""+st[1]+"\":\""+ex.getObject(2)+"\",\""+st[2]+"\":\""+ex.getObject(3)+"\",\""+st[3]+"\":\""+ex.getObject(4)+"\",\""+st[4]+
-						"\":\""+ex.getObject(5)+
-						"\",\""+st[5]+"\":\""+ex.getObject(6)+"\",\""+st[6]+"\":\""+ex.getObject(7)+"\",\""
-						+st[7]+"\"},";
-			}
-			tab = tab.substring(0,tab.length()-1);
-			if(!"".equals(tab)){
-				tab+="]";
-			}
-			return tab;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally{
-			try {
-				if(ex!=null)
-					ex.close();
-				if(pr!=null)
-					pr.close();
-				if(con!=null)
-					con.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public int count() {
-		Connection con = getConnection();
-		PreparedStatement pr =null;
-		ResultSet ex = null;
-		try {
-			pr= con.prepareStatement("SELECT count(1) FROM meals ");
-			ex = pr.executeQuery();
-			ex.next();
-			return ex.getInt(1);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}finally{
-			try {
-				if(ex!=null)
-					ex.close();
-				if(pr!=null)
-					pr.close();
-				if(con!=null)
-					con.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return 0;
-	}
-
 
 }

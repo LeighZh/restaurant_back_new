@@ -71,7 +71,7 @@ function del(id) {
                             querySubjectInfo();
                             swal("删除成功！", "该分类已被删除", "success");
                         }else{
-                            swal("删除失败！", "该分类暂时不能被删除", "error");
+                            swal("删除失败！", "该分类仍被部分餐品引用，暂时不能被删除", "error");
                         }
 
                     }

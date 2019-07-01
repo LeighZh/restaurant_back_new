@@ -56,7 +56,7 @@
                                     <label class="col-sm-4 control-label">菜系：</label>
                                     <div class="col-sm-7">
                                         <select id="series" name="series" class="form-control"  aria-required="true" aria-invalid="false">
-                                            <option value="null">请选择</option>
+                                            <option value="">请选择</option>
                                         </select>
                                     </div>
                                 </div>
@@ -81,7 +81,7 @@
                 <div class="ibox-title">
                     <h5>餐品列表</h5>
                     <div class="ibox-tools">
-                        <a class="close-link" title="添加客户" data-toggle='modal' data-target='#myModal5' onclick="showFileToUpload('')">
+                        <a class="close-link" title="添加客户" data-toggle='modal' data-target='#myModal5' onclick="showEditUser('')">
                             <i class="fa fa-user-plus"></i>
                         </a>
                     </div>
@@ -93,16 +93,15 @@
                             <th width="5%">编号</th>
                             <th width="10%">餐品名</th>
                             <th width="10%">所属菜系</th>
-                            <th width="20%">餐品摘要</th>
-                            <th width="5%">餐品价格</th>
-                            <th width="10%">餐品图片</th>
+                            <th width="20%">摘要</th>
+                            <th width="5%">价格</th>
+                            <th width="10%">图片</th>
                             <th width="40%">操作</th>
                         </tr>
                         </thead>
                         <tbody>
                         </tbody>
                     </table>
-
                 </div>
             </div>
         </div>
@@ -123,7 +122,7 @@
                             <div class="form-group draggable ui-draggable dropped">
                                 <label class="col-sm-2 control-label">菜品编号：</label>
                                 <div class="col-sm-5">
-                                    <input id="dialogUserAccount" name="dialogUserAccount" type="text"  aria-required="true" aria-invalid="false" class="form-control" placeholder="请输入登录名">
+                                    <input id="dialogUserAccount" name="dialogUserAccount" type="text"  aria-required="true" aria-invalid="false" class="form-control" placeholder="无需操作">
                                 </div>
                             </div>
                         </div>
@@ -133,7 +132,7 @@
                             <div class="form-group draggable ui-draggable dropped">
                                 <label class="col-sm-2 control-label">菜品名称：</label>
                                 <div class="col-sm-5">
-                                    <input id="dialogUserName" name="dialogUserName" type="text"  aria-required="true" aria-invalid="false" class="form-control" placeholder="请输入姓名">
+                                    <input id="dialogUserName" name="dialogUserName" type="text"  aria-required="true" aria-invalid="false" class="form-control" placeholder="">
                                 </div>
                             </div>
                         </div>
@@ -141,9 +140,11 @@
                     <div class="form-group">
                         <div class="col-md-9 droppable sortable ui-droppable ui-sortable"  style="width: 100%">
                             <div class="form-group draggable ui-draggable dropped">
-                                <label class="col-sm-2 control-label">菜品摘要：</label>
+                                <label class="col-sm-2 control-label">所属菜系：</label>
                                 <div class="col-sm-5">
-                                    <input id="dialogSummarize" name="dialogUserPhone" type="text"  aria-required="true" aria-invalid="false" class="form-control" placeholder="请输入手机号">
+                                    <select id="dialogSeries" name="series" class="form-control"  aria-required="true" aria-invalid="false">
+                                        <option value="">请选择</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -153,7 +154,7 @@
                             <div class="form-group draggable ui-draggable dropped">
                                 <label class="col-sm-2 control-label">菜品描述：</label>
                                 <div class="col-sm-5">
-                                    <input id="dialogDescribe" name="dialogUserEmail" type="text"  aria-required="true" aria-invalid="false" class="form-control" placeholder="请输入收货地址">
+                                    <input id="dialogDescribe" name="dialogUserEmail" type="text"  aria-required="true" aria-invalid="false" class="form-control" placeholder="">
                                 </div>
                             </div>
                         </div>
@@ -163,7 +164,7 @@
                             <div class="form-group draggable ui-draggable dropped">
                                 <label class="col-sm-2 control-label">菜品价格：</label>
                                 <div class="col-sm-5">
-                                    <input id="dialogPrice" name="dialogUserAddress" type="text"  aria-required="true" aria-invalid="false" class="form-control" placeholder="请输入收货地址">
+                                    <input id="dialogPrice" name="dialogUserAddress" type="text"  aria-required="true" aria-invalid="false" class="form-control" placeholder="">
                                 </div>
                             </div>
                         </div>
@@ -200,8 +201,8 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" id="closeUserInfoDialog" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" onclick="cancelUpload()">取消</button>
-                <button type="button" class="btn btn-primary" onclick="uploadFile()">上传</button>
+                <button type="button" class="btn btn-primary" onclick="cancelUpload()">取消上传</button>
+                <button type="button" class="btn btn-primary" onclick="saveOrUpdateUserInfo()">存储</button>
             </div>
         </div>
     </div>

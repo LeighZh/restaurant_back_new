@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    //indexSeriesSelect();
+    indexSeriesSelect();
     queryUserInfo();
 });
 var icon = "<i class='fa fa-times-circle'></i>";
@@ -9,7 +9,7 @@ function resetForm() {
     $(".form-horizontal select").val("");
     queryUserInfo();
 }
-function resetUserInfoDialog() {
+function resetUserInfoDialog(id) {
     $("#myModal5 input").val("");
     $("#myModal5 select").val("");
     $("#myModal5 input").removeClass("error");
@@ -42,48 +42,51 @@ function queryUserInfo() {
                 "bSort": false,
                 "data" : result,
                 "columns" : [{
-                    "data" : "menuId",
+                    "data" : "mealId",
                 },{
-                    "data" : "menuName",
+                    "data" : "mealName",
                 },{
-                    "data" : " mealSummarize",
+                    "data" : "seriesName",
+                    "defaultContent": "无"
+                },{
+                    "data" : "mealSummarize",
+                    "defaultContent": "无"
                 },{
                     "data" : "mealPrice",
                     "defaultContent": "未知"
                 },{
                     "data" : "mealImage",
-                    "defaultContent":"未知"
+                    "defaultContent": "无"
                 }],
                 "columnDefs": [{
                     "render" : function(data, type, row) {
                         var a = "";
-                        a += "<button type='button' class='btn btn-primary' onclick='showEditUser(\""+row.userId+"\")' data-toggle='modal' data-target='#myModal5' title='编辑用户' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-pencil-square-o'></i>&nbsp;编辑</button>"
-                        a += "<button type='button' class='btn btn-primary' onclick='deleteUser(\""+row.userId+"\")' title='删除用户' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-user-times'></i>&nbsp;删除</button>"
-                        a += "<button type='button' class='btn btn-primary' onclick='reSetPassord(\""+row.userId+"\")' data-toggle='modal' data-target='#resetPassword' title='重置密码' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-list'></i>&nbsp;详情</button>"
+                        a += "<button type='button' class='btn btn-primary' onclick='showEditUser(\""+row.mealId+"\")' data-toggle='modal' data-target='#myModal5' title='编辑用户' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-pencil-square-o'></i>&nbsp;编辑</button>"
+                        a += "<button type='button' class='btn btn-primary' onclick='deleteUser(\""+row.mealId+"\")' title='删除用户' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-user-times'></i>&nbsp;删除</button>"
+                        a += "<button type='button' class='btn btn-primary' onclick='reSetPassord(\""+row.mealId+"\")' data-toggle='modal' data-target='#resetPassword' title='重置密码' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-list'></i>&nbsp;详情</button>"
                         return a;
                     },
-                    "targets" :5
+                    "targets" :6
                 }]
             });
         }
     })
 }
-function indexTimeSelect(){
-    // 今天
-    var today = new Date();
-    today.setHours(0);
-    today.setMinutes(0);
-    today.setSeconds(0);
-    today.setMilliseconds(0);
-
-    var oneday = 1000 * 60 * 60 * 24;
-    var timeSelectInfo = "";
-    timeSelectInfo += "<option value='"+today.format("yyyy-MM-dd hh:mm:ss")+"'>"+"一天内"+"</option>";
-    timeSelectInfo += "<option value='"+(new Date(today- oneday * (today.getDay() - 1))).format("yyyy-MM-dd hh:mm:ss")+"'>"+"一周内"+"</option>";
-    timeSelectInfo += "<option value='"+(new Date(today - oneday * (today.getDate() - 1)).format("yyyy-MM-dd hh:mm:ss"))+"'>"+"一月内"+"</option>";
-    timeSelectInfo += "<option value='"+(new Date("1 01," + today.getFullYear() + " 00:00:00")).format("yyyy-MM-dd hh:mm:ss")+"'>"+"一年内"+"</option>";
-    timeSelectInfo += "<option value=0>"+"不限"+"</option>";
-    $("#userCreateTime").append(timeSelectInfo);
+function indexSeriesSelect() {
+    $.ajax({
+        type: "POST",
+        url: "/CookingServlet?select=query",
+        dataType: "json",
+        success:function (result){
+            console.log("indexSeries：" + result)
+            var roleSelectInfo = "";
+            for (var i=0; i<result.length; i++){
+                roleSelectInfo += "<option value='"+result[i].vegetableId+"'>"+result[i].vegetableName+"</option>"
+            }
+            $("#series").append(roleSelectInfo);
+            $("#dialogSeries").append(roleSelectInfo)
+        }
+    })
 }
 function deleteUser(id) {
     swal({
@@ -101,7 +104,7 @@ function deleteUser(id) {
             if (isConfirm) {
                 $.ajax({
                     type: "POST",
-                    url: "/userServlet?judge=delete",
+                    url: "/MenuServlet?judge=delete",
                     // contentType: "application/json;charset=UTF-8",
                     dataType: "json",
                     data:{
@@ -110,9 +113,9 @@ function deleteUser(id) {
                     success:function (result){
                         if(result){
                             queryUserInfo();
-                            swal("删除成功！", "用户已被删除", "success");
+                            swal("删除成功！", "餐品已被删除", "success");
                         }else{
-                            swal("删除失败！", "用户暂时不能被删除", "error");
+                            swal("删除失败！", "餐品暂时不能被删除", "error");
                         }
 
                     }
@@ -124,15 +127,15 @@ function deleteUser(id) {
 }
 //展示用户编辑详情模态窗口
 function showEditUser(id) {
-    resetUserInfoDialog();
+    resetUserInfoDialog(id);
     if(id!=''){
-        $("#dialogTitle").html("编辑用户")
-        // $("#dialogUserAccount").attr("readonly",true)
-        $("#dialogUserId").val(id);
+        $("#dialogTitle").html("编辑餐品")
+        $("#dialogUserAccount").attr("readonly",true);
+        $("#dialogUserAccount").val(id);
 
         $.ajax({
             type: "POST",
-            url: "/userServlet?judge=getUsers",
+            url: "/MenuServlet?judge=query",
             // contentType: "application/json;charset=UTF-8",
             dataType: "json",
             data:{
@@ -143,61 +146,40 @@ function showEditUser(id) {
                 //result = jQuery.parseJSON(result);
                 //console.log(result)
                 if(result.length >= 0){
-                    $("#dialogUserAccount").val(result[0].userName)
-                    $("#dialogUserName").val(result[0].trueName)
-                    $("#dialogUserPhone").val(result[0].phone)
-                    $("#dialogUserEmail").val(result[0].email)
-                    $("#dialogUserAddress").val(result[0].address)
+                    $("#dialogUserAccount").val(result[0].mealId)
+                    $("#dialogUserName").val(result[0].mealName)
+                    $("#dialogSeries").val(result[0].seriesName)
+                   // $('#problemSubject').html('<option value="' + result[0].subjectid + '">' + seriesName + '</option>').trigger("change");
+                    $("#dialogDescribe").val(result[0].mealSummarize)
+                    $("#dialogPrice").val(result[0].mealPrice)
                 }
 
             }
         })
     }else{
-        //$("#dialogUserAccount").attr("readonly",false)
-        $("#dialogTitle").html("添加用户")
+        $("#dialogUserAccount").attr("readonly",true);
+        $("#dialogTitle").html("添加餐品")
+        setProgress(0);
     }
 
 }
 //新增或更新用户信息
 function saveOrUpdateUserInfo() {
-    if($("#dialogUserInfo").validate({
-        rules: {
-            dialogUserAccount: {
-                required: true,
-                maxlength: 32
-            },
-            dialogUserPhone: {
-                required: true,
-                maxlength: 11
-            }
-        },
-        messages: {
-            dialogUserAccount: {
-                required: icon + "登录名不能为空",
-                minlength: icon + "登录名最长为32"
-            },
-            dialogUserPhone: {
-                required: icon + "电话号码不能为空",
-                equalTo: icon + "电话号码最长为11"
-            }
-        }
-    }).form()){
         $.ajax({
-
             type: "POST",
-            url: "/userServlet?judge=saveOrUpdateUser",
+            url: "/MenuServlet?judge=saveOrUpdate",
             dataType: "json",
             //contentType: "application/json;charset=UTF-8",
             data:{
-                "id" : $("#dialogUserId").val(),
-                "loginName" : $("#dialogUserAccount").val(),
-                "trueName" : $("#dialogUserName").val(),
-                "phone" : $("#dialogUserPhone").val(),
-                "email" : $("#dialogUserEmail").val(),
-                "address" : $("#dialogUserAddress").val()
+                "mealId" : $("#dialogUserAccount").val(),
+                "mealName" : $("#dialogUserName").val(),
+                "seriesId" : $("#dialogSeries").val(),
+                "mealSummarize" : $("#dialogDescribe").val(),
+                "mealPrice" : $("#dialogPrice").val(),
             },
             success:function (result){
                 if(result){
+                    //uploadFile($("#dialogUserAccount").val());
                     queryUserInfo();
                     //关闭模态窗口
                     $('#myModal5').modal('hide');
@@ -207,75 +189,8 @@ function saveOrUpdateUserInfo() {
                 }
             }
         });
-    }
 }
 
-//重置弹出框的内容
-function rePwdformReset() {
-    $("#resetPassword input").val("");
-    $("#resetPassword input").removeClass("error");
-    $("#resetPassword label.error").remove()
-}
-
-function reSetPassord(id) {
-    rePwdformReset();
-    $("#resetPasswordUserId").val(id)
-}
-
-//保存重置的密码
-function saveNewPassword() {
-    if($("#resetPasswordForm").validate({
-        rules: {
-            newPassword: {
-                required: true,
-                minlength: 6
-            },
-            verifyPassword: {
-                required: true,
-                equalTo: "#newPassword"
-            }
-        },
-        messages: {
-
-            newPassword: {
-                required: icon + "请填写新密码",
-                minlength: icon + "密码最少为6位"
-            },
-            verifyPassword: {
-                required: icon + "请再次输入新密码",
-                equalTo: icon + "两次密码输入不一致"
-            }
-        }
-    }).form()) {
-        $.ajax({
-            type: "POST",
-            url: "/userServlet?judge=resetUserPassword",
-            // contentType: "application/json;charset=UTF-8",
-            dataType: "json",
-            data:{
-                "id" : $("#resetPasswordUserId").val(),
-                "newPassword" : $("#newPassword").val()
-            },
-            success:function (result){
-                if(result){
-                    //关闭模态窗口
-                    $('#resetPassword').modal('hide');
-                    swal("修改成功！", "密码已成功修改", "success");
-                }else{
-                    swal("修改失败！", "密码修改失败", "error");
-                }
-
-            }
-        })
-    }
-}
-
-function showFileToUpload() {
-    resetUserInfoDialog();
-    $("#dialogTitle").html("新增菜品");
-    setProgress(0);
-
-}
 
 function setProgress(w) {
     $('#progressBar').width(w + '%');
@@ -359,38 +274,41 @@ function progressFunction(evt) {
     }
 }
 
+var ot;//上传开始时间
+var oloaded;//已上传文件大小
+var xhr;
+
 //上传文件类
 function uploadFile(id) {
     //alert($('#uploadFile').val());
-    if($('#uploadFile').val()=='')
-    {
-        swal('未选择文件','请选择文件');
-        return ;
+    if ($('#uploadFile').val() == '') {
+        swal('未选择文件', '请选择文件');
+        return;
     }
     var formData = new FormData();
     formData.append('file', $('#uploadFile')[0].files[0]);
     var length = getSize($('#uploadFile')[0].files[0].size);
-    if($('#uploadFile')[0].files[0].size >= 1073741824*5)//后面的5表示1G*5=5G 上限为5G 可修改
+    if ($('#uploadFile')[0].files[0].size >= 1073741824 * 5)//后面的5表示1G*5=5G 上限为5G 可修改
     {
         swal("上传失败！", "上传文件过大！最大不能超过1GB", "error");
-        return ;
+        return;
     }
 
     var FileName = $('#uploadFile')[0].files[0].name;
     $.ajax({
         type: "POST",
-        url: "/myFile/checkFileName",
+        url: "/FileServlet",
         dataType: "json",
         data: {
             name: FileName,
         },
-        success:function (result){
+        success: function (result) {
             //if(result.flag == "1"){
             showProgress();
-            var uploadGo = "/myFile/uploadMyFile?flag="+flag;
+            var uploadGo = "/myFile/uploadMyFile?flag=" + flag;
             xhr = new XMLHttpRequest();
             xhr.open("post", uploadGo, true);
-            xhr.onloadstart = function() {
+            xhr.onloadstart = function () {
                 ot = new Date().getTime();   //设置上传开始时间
                 oloaded = 0;//已上传的文件大小为0
             };
@@ -399,7 +317,6 @@ function uploadFile(id) {
             xhr.addEventListener("error", uploadFailed, false);
             xhr.addEventListener("abort", uploadCanceled, false);
             xhr.send(formData);
-            queryMyFileInfo();
             //swal("上传成功！", "", "success");
             //}else{
             //swal("上传失败！", result.message, "error");

@@ -11,7 +11,7 @@ public class DBUtils {
 	public static Connection getConnection(){
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			Connection conn=DriverManager.getConnection("jdbc:mysql://10.203.1.66:3306/restaurant?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai","root","123456");
+			Connection conn=DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/restaurant?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai","root","123456");
 			return conn;
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();

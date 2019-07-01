@@ -9,42 +9,26 @@ import java.util.List;
 
 public class MenuServersImpl implements MenuServers {
 	private MenuDao menuDao = new MenuDaoImpl();
+
 	@Override
-	public String select(String line, String pageSize, int first) {
-		// TODO Auto-generated method stub
-		return menuDao.select(line, pageSize, first);
+	public Boolean insert(MenuBean ben) {
+		return menuDao.insert(ben);
 	}
 
 	@Override
-	public String add(MenuBean ben) {
-		// TODO Auto-generated method stub
-		return menuDao.add(ben);
+	public Boolean update(MenuBean ben) {
+		return menuDao.update(ben);
 	}
 
 	@Override
-	public void delete(String name) {
-		menuDao.delete(name);
+	public Boolean delete(int id) {
+		return menuDao.delete(id);
 	}
 
 	@Override
 	public List<MenuBean> query(MenuBean menu) {
 		// TODO Auto-generated method stub
-		System.out.println("service!!!!!!!!!!!!!!!!!!!!!!!");
 		return menuDao.query(menu);
-	}
-
-	@Override
-	public void mod(String name,int id) {
-		// TODO Auto-generated method stub
-		menuDao.mod(name, id);
-	}
-
-	public int count() {
-		return menuDao.count();
-	}
-
-	public int getCount(){
-		return menuDao.count();
 	}
 
 }

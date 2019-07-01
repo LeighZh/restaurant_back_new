@@ -59,7 +59,6 @@ public class UserServlet extends HttpServlet {
 
 	public void saveOrUpdateUser(HttpServletRequest request, HttpServletResponse response,UserService userServlet){
 		boolean res = false;
-		System.out.println("进入函数");
 		String id = (request.getParameter("id") == null || request.getParameter("id").equals("")) ? "0" : request.getParameter("id");
 		System.out.println(id);
 		String loginName = request.getParameter("loginName") ;
