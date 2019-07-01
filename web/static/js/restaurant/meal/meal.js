@@ -20,7 +20,7 @@ function resetUserInfoDialog() {
 function queryUserInfo() {
     $.ajax({
         type: "POST",
-        url: "/userServlet?judge=getUsers",
+        url: "/MenuServlet?judge=getUsers",
         // contentType: "application/json;charset=UTF-8",
         dataType: "json",
         data:{
@@ -47,19 +47,13 @@ function queryUserInfo() {
                 },{
                     "data" : "menuName",
                 },{
-                    "data" : "createTime",
+                    "data" : " mealSummarize",
                 },{
-                    "data" : "trueName",
+                    "data" : "mealPrice",
                     "defaultContent": "未知"
                 },{
-                    "data" : "phone",
+                    "data" : "mealImage",
                     "defaultContent":"未知"
-                },{
-                    "data" : "email",
-                    "defaultContent": "未知"
-                },{
-                    "data" : "address",
-                    "defaultContent": "未知"
                 }],
                 "columnDefs": [{
                     "render" : function(data, type, row) {
@@ -69,7 +63,7 @@ function queryUserInfo() {
                         a += "<button type='button' class='btn btn-primary' onclick='reSetPassord(\""+row.userId+"\")' data-toggle='modal' data-target='#resetPassword' title='重置密码' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-list'></i>&nbsp;详情</button>"
                         return a;
                     },
-                    "targets" :7
+                    "targets" :5
                 }]
             });
         }
