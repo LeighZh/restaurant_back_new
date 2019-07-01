@@ -268,19 +268,17 @@ public class UserServlet extends HttpServlet {
 	}
 
 	public Boolean saveOrUpdateAdmin(HttpServletRequest request, HttpServletResponse response,UserService userServlet) {
-		String id = request.getParameter("id");
-		String name = request.getParameter("name");
-		String role = request.getParameter("role");
+		String id = request.getParameter("id").equals("") ? "0" : request.getParameter("id");
+		String name = request.getParameter("name").equals("") ? null : request.getParameter("name");
+		String role = request.getParameter("role").equals("") ? null : request.getParameter("role");
+		System.out.println(request.getParameter("id").getClass());
 		Boolean res = false;
 		//若用户id为空，为保存
 		if (Integer.parseInt(id) == 0) {
 			System.out.println("更新用户");
 			//若当前登录名已经存在，则抛出用户已存在的异常
 			System.out.println(userServlet.getUserByLoginName(name).size());
-			if (userServlet.getUserByLoginName(name).size() == 0) {
-				System.out.println("更新用户");
-				res = userServlet.insertAdmin(new UserBean(Integer.parseInt(id), name, role));
-			}
+			res = userServlet.insertAdmin(new UserBean(Integer.parseInt(id), name, role));
 		} else {
 			//不是新用户，进行用户更新
 			System.out.println("修改用户");
