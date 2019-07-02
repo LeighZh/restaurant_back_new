@@ -55,13 +55,6 @@ public class MenuBean {
 		this.mealSummarize = mealSummarize;
 	}
 
-	public MenuBean(String mealName, double mealPrice, String seriesName, String mealDescription) {
-		super();
-		this.mealName = mealName;
-		this.mealPrice = mealPrice;
-		this.seriesName = seriesName;
-		this.mealDescription = mealDescription;
-	}
 
 	public MenuBean(int mealId, String mealName, int mealSeriesId) {
 		this.mealId = mealId;

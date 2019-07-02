@@ -52,11 +52,11 @@ public class MenuServlet extends HttpServlet {
 		//若用户id为空，为保存
 		if (Integer.parseInt(mealId) == 0){
 			System.out.println("更新用户");
-			res = menu.insert(new MenuBean(Integer.parseInt(mealId),mealName,Double.parseDouble(mealPrice),seriesId,mealDescription,mealSummarize));
+			res = menu.insert(new MenuBean(Integer.parseInt(mealId),mealName,Double.parseDouble(mealPrice),Integer.parseInt(seriesId),mealDescription,mealSummarize));
 		}else{
 			//不是新用户，进行用户更新
 			System.out.println("修改用户");
-			res = menu.update(new MenuBean(Integer.parseInt(mealId),mealName,Double.parseDouble(mealPrice),seriesId,mealDescription,mealSummarize));
+			res = menu.update(new MenuBean(Integer.parseInt(mealId),mealName,Double.parseDouble(mealPrice),Integer.parseInt(seriesId),mealDescription,mealSummarize));
 		}
 		try {
 			System.out.println("执行结果：" + String.valueOf(res));

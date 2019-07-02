@@ -185,7 +185,7 @@ function saveOrUpdateUserInfo() {
                     $('#myModal5').modal('hide');
                     swal("保存成功！", "success");
                 }else{
-                    swal("保存失败！", result.message, "error");
+                    swal("请选择菜系！", result.message, "error");
                 }
             }
         });

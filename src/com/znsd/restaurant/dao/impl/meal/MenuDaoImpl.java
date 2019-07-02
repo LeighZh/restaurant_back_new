@@ -18,7 +18,7 @@ public class MenuDaoImpl extends DBUtils implements MenuDao {
 		Connection connection = DBUtils.getConnection();
 		PreparedStatement prepare = null;
 		boolean res = false;
-
+		System.out.println(ben.toString());
 		try {
 			prepare = connection.prepareStatement("insert into  meals (mealSeriesId,mealName,mealSummarize,mealDescription,mealPrice,mealImage) values(?,?,?,?,?,?)");
 			prepare.setInt(1, ben.getMealSeriesId());
@@ -43,17 +43,14 @@ public class MenuDaoImpl extends DBUtils implements MenuDao {
 		PreparedStatement prepare = null;
 		boolean res = false;
 		try {
-			prepare = connection.prepareStatement(" update  meals set mealSeriesId = ?, mealName = ? ,mealSummarize = ?,mealDescription = ?,mealPrice = ?,mealImage = ?");
+			prepare = connection.prepareStatement(" update  meals set mealSeriesId = ?, mealName = ? ,mealSummarize = ?,mealDescription = ?,mealPrice = ?,mealImage = ? where mealId = ?");
 			prepare.setInt(1, ben.getMealSeriesId());
 			prepare.setString(2, ben.getMealName());
 			prepare.setString(3, ben.getMealSummarize());
 			prepare.setString(4, ben.getMealDescription());
-			prepare.setString(4, ben.getMealDescription());
-			prepare.setString(4, ben.getMealDescription());
 			prepare.setDouble(5,ben.getMealPrice());
 			prepare.setString(6,ben.getMealImage());
-			prepare.execute();
-
+			prepare.setInt(7, ben.getMealId());
 			prepare.execute();
 			res = true;
 		} catch (SQLException e) {
@@ -86,10 +83,11 @@ public class MenuDaoImpl extends DBUtils implements MenuDao {
 		Connection connection = DBUtils.getConnection();
 		PreparedStatement prepare = null;
 		ResultSet query = null;
+		System.out.println(menu.toString());
 		String sql = "SELECT mealId,mealName,mealPrice,seriesId,seriesName,mealImage,mealDescription,mealSummarize FROM meals,mealseries WHERE meals.mealSeriesId = mealseries.seriesId ";
 
 		if(menu.getMealId() != 0){
-			sql = sql + " and mealId= "+ menu.getMealImage();
+			sql = sql + " and mealId= "+ menu.getMealId();
 		}
 		if(menu.getMealName() != null ){
 			sql = sql +  " and mealName = " +  "'" + menu.getMealName()+  "'";
@@ -97,6 +95,7 @@ public class MenuDaoImpl extends DBUtils implements MenuDao {
 		if(menu.getMealSeriesId() != 0 ){
 			sql = sql +  " and seriesId = '" + menu.getMealSeriesId() + "'";
 		}
+		System.out.println(sql);
 		try {
 			prepare = connection.prepareStatement(sql);
 			query = prepare.executeQuery();
