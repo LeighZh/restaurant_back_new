@@ -138,6 +138,7 @@ function showEditUser(id) {
             url: "/MenuServlet?judge=query",
             // contentType: "application/json;charset=UTF-8",
             dataType: "json",
+            async:false,
             data:{
                 "id" :  id,
             },
@@ -148,8 +149,7 @@ function showEditUser(id) {
                 if(result.length >= 0){
                     $("#dialogUserAccount").val(result[0].mealId)
                     $("#dialogUserName").val(result[0].mealName)
-                    $("#dialogSeries").val(result[0].seriesName)
-                   // $('#problemSubject').html('<option value="' + result[0].subjectid + '">' + seriesName + '</option>').trigger("change");
+                    $("#dialogSeries").val(result[0].mealSeriesId)
                     $("#dialogDescribe").val(result[0].mealSummarize)
                     $("#dialogPrice").val(result[0].mealPrice)
                 }
