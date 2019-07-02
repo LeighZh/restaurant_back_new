@@ -63,7 +63,7 @@ function queryUserInfo() {
                         var a = "";
                         a += "<button type='button' class='btn btn-primary' onclick='showEditUser(\""+row.mealId+"\")' data-toggle='modal' data-target='#myModal5' title='编辑用户' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-pencil-square-o'></i>&nbsp;编辑</button>"
                         a += "<button type='button' class='btn btn-primary' onclick='deleteUser(\""+row.mealId+"\")' title='删除用户' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-user-times'></i>&nbsp;删除</button>"
-                        a += "<button type='button' class='btn btn-primary' onclick='reSetPassord(\""+row.mealId+"\")' data-toggle='modal' data-target='#resetPassword' title='重置密码' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-list'></i>&nbsp;详情</button>"
+                        a += "<button type='button' class='btn btn-primary' onclick='showDetail(\""+row.mealId+"\")' data-toggle='modal' data-target='#resetPassword' title='菜品详情' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-list'></i>&nbsp;详情</button>"
                         return a;
                     },
                     "targets" :6
@@ -85,6 +85,7 @@ function indexSeriesSelect() {
             }
             $("#series").append(roleSelectInfo);
             $("#dialogSeries").append(roleSelectInfo)
+            $("#dialogMealSeries").append(roleSelectInfo)
         }
     })
 }
@@ -138,7 +139,6 @@ function showEditUser(id) {
             url: "/MenuServlet?judge=query",
             // contentType: "application/json;charset=UTF-8",
             dataType: "json",
-            async:false,
             data:{
                 "id" :  id,
             },
@@ -149,7 +149,8 @@ function showEditUser(id) {
                 if(result.length >= 0){
                     $("#dialogUserAccount").val(result[0].mealId)
                     $("#dialogUserName").val(result[0].mealName)
-                    $("#dialogSeries").val(result[0].mealSeriesId)
+                    $("#dialogSeries").val(result[0].seriesName)
+                    // $('#problemSubject').html('<option value="' + result[0].subjectid + '">' + seriesName + '</option>').trigger("change");
                     $("#dialogDescribe").val(result[0].mealSummarize)
                     $("#dialogPrice").val(result[0].mealPrice)
                 }
@@ -159,10 +160,49 @@ function showEditUser(id) {
     }else{
         $("#dialogUserAccount").attr("readonly",true);
         $("#dialogTitle").html("添加餐品")
-        setProgress(0);
+        //setProgress(0);
     }
 
 }
+//展示菜单详情
+function showDetail(id) {
+    if (id != '') {
+        $("#dialogMealTitle").html("餐品详情")
+        $("#dialogMealAccount").attr("readonly", true);
+        $("#dialogMealAccount").val(id);
+
+        $.ajax({
+            type: "POST",
+            url: "/MenuServlet?judge=query",
+            // contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            async: false,
+            data: {
+                "id": id,
+            },
+            success: function (result) {
+                console.log(result)
+                //result = jQuery.parseJSON(result);
+                //console.log(result)
+                if (result.length >= 0) {
+                    $("#dialogMealAccount").val(result[0].mealId)
+                    $("#dialogMealName").val(result[0].mealName)
+                    $("#dialogMealName").attr("readonly", true);
+                    $("#dialogMealSeries").val(result[0].mealSeriesId)
+                    $("#dialogMealSeries").attr("readonly", true);
+                    $("#dialogMealDescribe").val(result[0].mealSummarize)
+                    $("#dialogMealDescribe").attr("readonly", true);
+                    $("#dialogMealSummarize").val(result[0].mealDescription)
+                    $("#dialogMealSummarize").attr("readonly", true);
+                    $("#dialogMealPrice").val(result[0].mealPrice)
+                    $("#dialogMealPrice").attr("readonly", true);
+                }
+
+            }
+        })
+    }
+}
+
 //新增或更新用户信息
 function saveOrUpdateUserInfo() {
         $.ajax({
@@ -170,161 +210,162 @@ function saveOrUpdateUserInfo() {
             url: "/MenuServlet?judge=saveOrUpdate",
             dataType: "json",
             //contentType: "application/json;charset=UTF-8",
-            data:{
-                "mealId" : $("#dialogUserAccount").val(),
-                "mealName" : $("#dialogUserName").val(),
-                "seriesId" : $("#dialogSeries").val(),
-                "mealSummarize" : $("#dialogDescribe").val(),
-                "mealPrice" : $("#dialogPrice").val(),
+            data: {
+                "mealId": $("#dialogUserAccount").val(),
+                "mealName": $("#dialogUserName").val(),
+                "seriesId": $("#dialogSeries").val(),
+                "mealSummarize": $("#dialogDescribe").val(),
+                "mealPrice": $("#dialogPrice").val(),
             },
-            success:function (result){
-                if(result){
+            success: function (result) {
+                if (result) {
                     //uploadFile($("#dialogUserAccount").val());
                     queryUserInfo();
                     //关闭模态窗口
                     $('#myModal5').modal('hide');
                     swal("保存成功！", "success");
-                }else{
+                } else {
                     swal("请选择菜系！", result.message, "error");
                 }
             }
         });
-}
-
-
-function setProgress(w) {
-    $('#progressBar').width(w + '%');
-    $('#progressBar').text(w + '%');
-    $("#showInfo").html("");
-}
-
-function showProgress() {
-    $('#progressBar').parent().show();
-}
-function hideProgress() {
-    $('#progressBar').parent().hide();
-}
-
-function getSize(size) {
-    var fileSize = '0KB';
-    if (size > 1024 * 1024) {
-        fileSize = (Math.round(size / (1024 * 1024))).toString() + 'MB';
-    } else {
-        fileSize = (Math.round(size / 1024)).toString() + 'KB';
     }
-    return fileSize;
-}
+
+
+    function setProgress(w) {
+        $('#progressBar').width(w + '%');
+        $('#progressBar').text(w + '%');
+        $("#showInfo").html("");
+    }
+
+    function showProgress() {
+        $('#progressBar').parent().show();
+    }
+
+    function hideProgress() {
+        $('#progressBar').parent().hide();
+    }
+
+    function getSize(size) {
+        var fileSize = '0KB';
+        if (size > 1024 * 1024) {
+            fileSize = (Math.round(size / (1024 * 1024))).toString() + 'MB';
+        } else {
+            fileSize = (Math.round(size / 1024)).toString() + 'KB';
+        }
+        return fileSize;
+    }
 
 //上传成功后回调
-function uploadComplete(evt) {
-    $('#myModal5').modal('hide');
-    resetForm();
-    swal("上传成功！","", "success");
-    setProgress(0);
-};
+    function uploadComplete(evt) {
+        $('#myModal5').modal('hide');
+        resetForm();
+        swal("上传成功！", "", "success");
+        setProgress(0);
+    };
 
 //上传失败回调
-function uploadFailed(evt) {
-    swal("上传失败！", evt.target.responseText, "error");
-}
+    function uploadFailed(evt) {
+        swal("上传失败！", evt.target.responseText, "error");
+    }
 
 //终止上传
-function cancelUpload() {
-    xhr.abort();
-}
+    function cancelUpload() {
+        xhr.abort();
+    }
 
 //上传取消后回调
-function uploadCanceled(evt) {
-    swal("上传失败！", '上传取消,上传被用户取消或者浏览器断开连接:' + evt.target.responseText, "error");
-}
-
-function progressFunction(evt) {
-    var progressBar = document.getElementById("progressBar");
-    var percentageDiv = document.getElementById("percentage");
-    if (evt.lengthComputable) {
-        var completePercent = Math.round(evt.loaded / evt.total * 100)
-            + '%';
-        $('#progressBar').width(completePercent);
-        $('#progressBar').text(completePercent);
-
-        var time = $("#time");
-        var nt = new Date().getTime();     //获取当前时间
-        var pertime = (nt-ot)/1000;        //计算出上次调用该方法时到现在的时间差，单位为s
-        ot = new Date().getTime();          //重新赋值时间，用于下次计算
-
-        var perload = evt.loaded - oloaded; //计算该分段上传的文件大小，单位b
-        oloaded = evt.loaded;               //重新赋值已上传文件大小
-
-        //上传速度计算
-        var speed = perload/pertime;//单位b/s
-        var bspeed = speed;
-        var units = 'b/s';//单位名称
-        if(speed/1024>1){
-            speed = speed/1024;
-            units = 'k/s';
-        }
-        if(speed/1024>1){
-            speed = speed/1024;
-            units = 'M/s';
-        }
-        speed = speed.toFixed(1);
-        //剩余时间
-        var resttime = ((evt.total-evt.loaded)/bspeed).toFixed(1);
-        $("#showInfo").html(speed+units+'，剩余时间：'+resttime+'s');
+    function uploadCanceled(evt) {
+        swal("上传失败！", '上传取消,上传被用户取消或者浏览器断开连接:' + evt.target.responseText, "error");
     }
-}
 
-var ot;//上传开始时间
-var oloaded;//已上传文件大小
-var xhr;
+    function progressFunction(evt) {
+        var progressBar = document.getElementById("progressBar");
+        var percentageDiv = document.getElementById("percentage");
+        if (evt.lengthComputable) {
+            var completePercent = Math.round(evt.loaded / evt.total * 100)
+                + '%';
+            $('#progressBar').width(completePercent);
+            $('#progressBar').text(completePercent);
+
+            var time = $("#time");
+            var nt = new Date().getTime();     //获取当前时间
+            var pertime = (nt - ot) / 1000;        //计算出上次调用该方法时到现在的时间差，单位为s
+            ot = new Date().getTime();          //重新赋值时间，用于下次计算
+
+            var perload = evt.loaded - oloaded; //计算该分段上传的文件大小，单位b
+            oloaded = evt.loaded;               //重新赋值已上传文件大小
+
+            //上传速度计算
+            var speed = perload / pertime;//单位b/s
+            var bspeed = speed;
+            var units = 'b/s';//单位名称
+            if (speed / 1024 > 1) {
+                speed = speed / 1024;
+                units = 'k/s';
+            }
+            if (speed / 1024 > 1) {
+                speed = speed / 1024;
+                units = 'M/s';
+            }
+            speed = speed.toFixed(1);
+            //剩余时间
+            var resttime = ((evt.total - evt.loaded) / bspeed).toFixed(1);
+            $("#showInfo").html(speed + units + '，剩余时间：' + resttime + 's');
+        }
+    }
+
+    var ot;//上传开始时间
+    var oloaded;//已上传文件大小
+    var xhr;
 
 //上传文件类
-function uploadFile(id) {
-    //alert($('#uploadFile').val());
-    if ($('#uploadFile').val() == '') {
-        swal('未选择文件', '请选择文件');
-        return;
-    }
-    var formData = new FormData();
-    formData.append('file', $('#uploadFile')[0].files[0]);
-    var length = getSize($('#uploadFile')[0].files[0].size);
-    if ($('#uploadFile')[0].files[0].size >= 1073741824 * 5)//后面的5表示1G*5=5G 上限为5G 可修改
-    {
-        swal("上传失败！", "上传文件过大！最大不能超过1GB", "error");
-        return;
-    }
-
-    var FileName = $('#uploadFile')[0].files[0].name;
-    $.ajax({
-        type: "POST",
-        url: "/FileServlet",
-        dataType: "json",
-        data: {
-            name: FileName,
-        },
-        success: function (result) {
-            //if(result.flag == "1"){
-            showProgress();
-            var uploadGo = "/myFile/uploadMyFile?flag=" + flag;
-            xhr = new XMLHttpRequest();
-            xhr.open("post", uploadGo, true);
-            xhr.onloadstart = function () {
-                ot = new Date().getTime();   //设置上传开始时间
-                oloaded = 0;//已上传的文件大小为0
-            };
-            xhr.upload.addEventListener("progress", progressFunction, false);
-            xhr.addEventListener("load", uploadComplete, false);
-            xhr.addEventListener("error", uploadFailed, false);
-            xhr.addEventListener("abort", uploadCanceled, false);
-            xhr.send(formData);
-            //swal("上传成功！", "", "success");
-            //}else{
-            //swal("上传失败！", result.message, "error");
-            //}
+    function uploadFile(id) {
+        //alert($('#uploadFile').val());
+        if ($('#uploadFile').val() == '') {
+            swal('未选择文件', '请选择文件');
+            return;
         }
-    })
+        var formData = new FormData();
+        formData.append('file', $('#uploadFile')[0].files[0]);
+        var length = getSize($('#uploadFile')[0].files[0].size);
+        if ($('#uploadFile')[0].files[0].size >= 1073741824 * 5)//后面的5表示1G*5=5G 上限为5G 可修改
+        {
+            swal("上传失败！", "上传文件过大！最大不能超过1GB", "error");
+            return;
+        }
 
-}
+        var FileName = $('#uploadFile')[0].files[0].name;
+        $.ajax({
+            type: "POST",
+            url: "/FileServlet",
+            dataType: "json",
+            data: {
+                name: FileName,
+            },
+            success: function (result) {
+                //if(result.flag == "1"){
+                showProgress();
+                var uploadGo = "/myFile/uploadMyFile?flag=" + flag;
+                xhr = new XMLHttpRequest();
+                xhr.open("post", uploadGo, true);
+                xhr.onloadstart = function () {
+                    ot = new Date().getTime();   //设置上传开始时间
+                    oloaded = 0;//已上传的文件大小为0
+                };
+                xhr.upload.addEventListener("progress", progressFunction, false);
+                xhr.addEventListener("load", uploadComplete, false);
+                xhr.addEventListener("error", uploadFailed, false);
+                xhr.addEventListener("abort", uploadCanceled, false);
+                xhr.send(formData);
+                //swal("上传成功！", "", "success");
+                //}else{
+                //swal("上传失败！", result.message, "error");
+                //}
+            }
+        })
+
+    }
 
 
 
