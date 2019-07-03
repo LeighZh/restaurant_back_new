@@ -162,7 +162,6 @@ function showEditUser(id) {
         $("#dialogTitle").html("添加餐品")
         //setProgress(0);
     }
-
 }
 //展示菜单详情
 function showDetail(id) {
