@@ -31,13 +31,13 @@
     </servlet-mapping>
     <servlet>
         <description></description>
-        <display-name>TableServlet</display-name>
-        <servlet-name>TableServlet</servlet-name>
-        <servlet-class>com.znsd.restaurant.servlet.TableServlet</servlet-class>
+        <display-name>FileServlet</display-name>
+        <servlet-name>FileServlet</servlet-name>
+        <servlet-class>com.znsd.restaurant.servlet.System.FileServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>TableServlet</servlet-name>
-        <url-pattern>/TableServlet</url-pattern>
+        <servlet-name>FileServlet</servlet-name>
+        <url-pattern>/FileServlet</url-pattern>
     </servlet-mapping>
 
     <servlet>

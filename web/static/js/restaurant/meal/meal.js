@@ -28,47 +28,29 @@ function queryUserInfo() {
             "series" : $('#series').val(),
         },
         success:function (result) {
-            console.log(result)
+            console.log(result);
             //result = jQuery.parseJSON(result);
             //console.log(result)
-
-            var dataTable = $('#userInfoTable');
-            if ($.fn.dataTable.isDataTable(dataTable)) {
-                dataTable.DataTable().destroy();
+            var innerHtml = '';
+            $('#CLDtbody').empty();
+            for (i = 0; i < result.length; i++){
+                innerHtml += "<tr>";
+                innerHtml += "<td>"+result[i].mealId+"</td>";
+                innerHtml += "<td>"+result[i].mealName+"</td>";
+                innerHtml += "<td>"+result[i].seriesName+"</td>";
+                innerHtml += "<td>"+result[i].mealSummarize+"</td>";
+                innerHtml += "<td>"+result[i].mealPrice+"</td>";
+                innerHtml += (result[i].mealImage == "undefined") ? "<td>"+""+"</td>" : "<td><img width='40' src=" + result[i].mealImage + "></td>";
+                var a = "";
+                a += "<td><button type='button' class='btn btn-primary' onclick='showEditUser(\""+result[i].mealId+"\")' data-toggle='modal' data-target='#myModal5' title='编辑用户' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-pencil-square-o'></i>&nbsp;编辑</button>";
+                a += "<button type='button' class='btn btn-primary' onclick='deleteUser(\""+result[i].mealId+"\")' title='删除用户' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-user-times'></i>&nbsp;删除</button>";
+                a += "<button type='button' class='btn btn-primary' onclick='showDetail(\""+result[i].mealId+"\")' data-toggle='modal' data-target='#resetPassword' title='菜品详情' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-list'></i>&nbsp;详情</button></td>";
+                innerHtml += a;
+                innerHtml += "</tr>";
             }
-            dataTable.DataTable({
-                "serverSide": false,
-                "autoWidth" : false,
-                "bSort": false,
-                "data" : result,
-                "columns" : [{
-                    "data" : "mealId",
-                },{
-                    "data" : "mealName",
-                },{
-                    "data" : "seriesName",
-                    "defaultContent": "无"
-                },{
-                    "data" : "mealSummarize",
-                    "defaultContent": "无"
-                },{
-                    "data" : "mealPrice",
-                    "defaultContent": "未知"
-                },{
-                    "data" : "mealImage",
-                    "defaultContent": "无"
-                }],
-                "columnDefs": [{
-                    "render" : function(data, type, row) {
-                        var a = "";
-                        a += "<button type='button' class='btn btn-primary' onclick='showEditUser(\""+row.mealId+"\")' data-toggle='modal' data-target='#myModal5' title='编辑用户' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-pencil-square-o'></i>&nbsp;编辑</button>"
-                        a += "<button type='button' class='btn btn-primary' onclick='deleteUser(\""+row.mealId+"\")' title='删除用户' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-user-times'></i>&nbsp;删除</button>"
-                        a += "<button type='button' class='btn btn-primary' onclick='showDetail(\""+row.mealId+"\")' data-toggle='modal' data-target='#resetPassword' title='菜品详情' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-list'></i>&nbsp;详情</button>"
-                        return a;
-                    },
-                    "targets" :6
-                }]
-            });
+            $('#CLDtbody').append(innerHtml)
+
+
         }
     })
 }
@@ -78,13 +60,13 @@ function indexSeriesSelect() {
         url: "/CookingServlet?select=query",
         dataType: "json",
         success:function (result){
-            console.log("indexSeries：" + result)
+            console.log("indexSeries：" + result);
             var roleSelectInfo = "";
             for (var i=0; i<result.length; i++){
                 roleSelectInfo += "<option value='"+result[i].vegetableId+"'>"+result[i].vegetableName+"</option>"
             }
             $("#series").append(roleSelectInfo);
-            $("#dialogSeries").append(roleSelectInfo)
+            $("#dialogSeries").append(roleSelectInfo);
             $("#dialogMealSeries").append(roleSelectInfo)
         }
     })
@@ -130,7 +112,7 @@ function deleteUser(id) {
 function showEditUser(id) {
     resetUserInfoDialog(id);
     if(id!=''){
-        $("#dialogTitle").html("编辑餐品")
+        $("#dialogTitle").html("编辑餐品");
         $("#dialogUserAccount").attr("readonly",true);
         $("#dialogUserAccount").val(id);
 
@@ -143,15 +125,15 @@ function showEditUser(id) {
                 "id" :  id,
             },
             success:function (result){
-                console.log(result)
+                console.log(result);
                 //result = jQuery.parseJSON(result);
                 //console.log(result)
                 if(result.length >= 0){
-                    $("#dialogUserAccount").val(result[0].mealId)
-                    $("#dialogUserName").val(result[0].mealName)
-                    $("#dialogSeries").val(result[0].seriesName)
+                    $("#dialogUserAccount").val(result[0].mealId);
+                    $("#dialogUserName").val(result[0].mealName);
+                    $("#dialogSeries").val(result[0].seriesName);
                     // $('#problemSubject').html('<option value="' + result[0].subjectid + '">' + seriesName + '</option>').trigger("change");
-                    $("#dialogDescribe").val(result[0].mealSummarize)
+                    $("#dialogDescribe").val(result[0].mealSummarize);
                     $("#dialogPrice").val(result[0].mealPrice)
                 }
 
@@ -166,7 +148,7 @@ function showEditUser(id) {
 //展示菜单详情
 function showDetail(id) {
     if (id != '') {
-        $("#dialogMealTitle").html("餐品详情")
+        $("#dialogMealTitle").html("餐品详情");
         $("#dialogMealAccount").attr("readonly", true);
         $("#dialogMealAccount").val(id);
 
@@ -180,20 +162,20 @@ function showDetail(id) {
                 "id": id,
             },
             success: function (result) {
-                console.log(result)
+                console.log(result);
                 //result = jQuery.parseJSON(result);
                 //console.log(result)
                 if (result.length >= 0) {
-                    $("#dialogMealAccount").val(result[0].mealId)
-                    $("#dialogMealName").val(result[0].mealName)
+                    $("#dialogMealAccount").val(result[0].mealId);
+                    $("#dialogMealName").val(result[0].mealName);
                     $("#dialogMealName").attr("readonly", true);
-                    $("#dialogMealSeries").val(result[0].mealSeriesId)
+                    $("#dialogMealSeries").val(result[0].mealSeriesId);
                     $("#dialogMealSeries").attr("readonly", true);
-                    $("#dialogMealDescribe").val(result[0].mealSummarize)
+                    $("#dialogMealDescribe").val(result[0].mealSummarize);
                     $("#dialogMealDescribe").attr("readonly", true);
-                    $("#dialogMealSummarize").val(result[0].mealDescription)
+                    $("#dialogMealSummarize").val(result[0].mealDescription);
                     $("#dialogMealSummarize").attr("readonly", true);
-                    $("#dialogMealPrice").val(result[0].mealPrice)
+                    $("#dialogMealPrice").val(result[0].mealPrice);
                     $("#dialogMealPrice").attr("readonly", true);
                 }
 
@@ -218,10 +200,8 @@ function saveOrUpdateUserInfo() {
             },
             success: function (result) {
                 if (result) {
-                    //uploadFile($("#dialogUserAccount").val());
-                    queryUserInfo();
-                    //关闭模态窗口
-                    $('#myModal5').modal('hide');
+                    uploadFile($("#dialogUserAccount").val());
+                   // queryUserInfo();
                     swal("保存成功！", "success");
                 } else {
                     swal("请选择菜系！", result.message, "error");
@@ -261,8 +241,7 @@ function saveOrUpdateUserInfo() {
         resetForm();
         swal("上传成功！", "", "success");
         setProgress(0);
-    };
-
+    }
 //上传失败回调
     function uploadFailed(evt) {
         swal("上传失败！", evt.target.responseText, "error");
@@ -320,49 +299,37 @@ function saveOrUpdateUserInfo() {
 
 //上传文件类
     function uploadFile(id) {
-        //alert($('#uploadFile').val());
-        if ($('#uploadFile').val() == '') {
-            swal('未选择文件', '请选择文件');
+        if(id == ""){
             return;
         }
         var formData = new FormData();
         formData.append('file', $('#uploadFile')[0].files[0]);
-        var length = getSize($('#uploadFile')[0].files[0].size);
-        if ($('#uploadFile')[0].files[0].size >= 1073741824 * 5)//后面的5表示1G*5=5G 上限为5G 可修改
-        {
-            swal("上传失败！", "上传文件过大！最大不能超过1GB", "error");
-            return;
-        }
+        // if ($('#uploadFile')[0].files[0].size >= 1073741824 * 5)//后面的5表示1G*5=5G 上限为5G 可修改
+        // {
+        //     swal("上传失败！", "上传文件过大！最大不能超过1GB", "error");
+        //     return;
+        //}
 
-        var FileName = $('#uploadFile')[0].files[0].name;
-        $.ajax({
-            type: "POST",
-            url: "/FileServlet",
-            dataType: "json",
-            data: {
-                name: FileName,
-            },
-            success: function (result) {
-                //if(result.flag == "1"){
-                showProgress();
-                var uploadGo = "/myFile/uploadMyFile?flag=" + flag;
-                xhr = new XMLHttpRequest();
-                xhr.open("post", uploadGo, true);
-                xhr.onloadstart = function () {
-                    ot = new Date().getTime();   //设置上传开始时间
-                    oloaded = 0;//已上传的文件大小为0
-                };
-                xhr.upload.addEventListener("progress", progressFunction, false);
-                xhr.addEventListener("load", uploadComplete, false);
-                xhr.addEventListener("error", uploadFailed, false);
-                xhr.addEventListener("abort", uploadCanceled, false);
-                xhr.send(formData);
-                //swal("上传成功！", "", "success");
-                //}else{
-                //swal("上传失败！", result.message, "error");
-                //}
-            }
-        })
+        var fileName = $('#uploadFile').val();
+        //if(result.flag == "1"){
+        showProgress();
+        var uploadGo = "/FileServlet?name=" + fileName + "&id=" + id;
+        xhr = new XMLHttpRequest();
+        xhr.open("post", uploadGo, true);
+        xhr.onloadstart = function () {
+            ot = new Date().getTime();   //设置上传开始时间
+            oloaded = 0;//已上传的文件大小为0
+        };
+        xhr.upload.addEventListener("progress", progressFunction, false);
+        xhr.addEventListener("load", uploadComplete, false);
+        xhr.addEventListener("error", uploadFailed, false);
+        xhr.addEventListener("abort", uploadCanceled, false);
+        xhr.send(formData);
+        //swal("上传成功！", "", "success");
+        //}else{
+        //swal("上传失败！", result.message, "error");
+        //}
+        saveOrUpdateUserInfo();
 
     }
 

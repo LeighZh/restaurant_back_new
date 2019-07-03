@@ -31,4 +31,9 @@ public class MenuServersImpl implements MenuServers {
 		return menuDao.query(menu);
 	}
 
+	@Override
+	public boolean updateImage(int id, String path) {
+		return menuDao.updateImage(id,path);
+	}
+
 }

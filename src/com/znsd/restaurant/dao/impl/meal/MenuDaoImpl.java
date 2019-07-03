@@ -112,4 +112,23 @@ public class MenuDaoImpl extends DBUtils implements MenuDao {
 		return null;
 	}
 
+	@Override
+	public boolean updateImage(int id,String path) {
+		Connection connection = DBUtils.getConnection();
+		PreparedStatement prepare = null;
+		System.out.println("updateImage");
+		boolean res = false;
+		try {
+			prepare = connection.prepareStatement(" update  meals set mealImage = ? where mealId = ?");
+			prepare.setString(1,path);
+			prepare.setInt(2, id);
+			prepare.execute();
+			res = true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		System.out.println(res);
+		return res;
+	}
+
 }

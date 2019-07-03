@@ -22,7 +22,7 @@ public class MenuServlet extends HttpServlet {
 		doPost(request, response);
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("appliaction/JSON;charsex=UTF-8");
@@ -37,18 +37,18 @@ public class MenuServlet extends HttpServlet {
 			this.saveOrUpdate(request,response,menu);
 		}
 	}
-	public void saveOrUpdate(HttpServletRequest request, HttpServletResponse response,MenuServers menu) throws ServletException, IOException {
+	public void saveOrUpdate(HttpServletRequest request, HttpServletResponse response,MenuServers menu) {
 		boolean res = false;
 		String mealId = (request.getParameter("mealId") == null || request.getParameter("mealId").equals("")) ? "0" : request.getParameter("mealId");
-		System.out.println(mealId);
+		//System.out.println(mealId);
 		String mealName = request.getParameter("mealName") ;
 		String seriesId = (request.getParameter("seriesId")  == null || request.getParameter("seriesId").equals("")) ? "0" : request.getParameter("seriesId");
-		System.out.println(seriesId);
+		//System.out.println(seriesId);
 		String mealSummarize = request.getParameter("mealSummarize");
 		String mealPrice = (request.getParameter("mealPrice") == null || request.getParameter("mealPrice").equals("")) ? "0" : request.getParameter("mealPrice");
 		String mealDescription = request.getParameter("mealDescription");
 
-		System.out.println(new MenuBean(Integer.parseInt(mealId),mealName,Double.parseDouble(mealPrice),Integer.parseInt(seriesId),mealDescription,mealSummarize).toString());
+		//System.out.println(new MenuBean(Integer.parseInt(mealId),mealName,Double.parseDouble(mealPrice),Integer.parseInt(seriesId),mealDescription,mealSummarize).toString());
 		//若用户id为空，为保存
 		if (Integer.parseInt(mealId) == 0){
 			System.out.println("更新用户");
@@ -70,18 +70,18 @@ public class MenuServlet extends HttpServlet {
 		String mealId = (request.getParameter("id") == null || request.getParameter("id").equals("") ) ? "0" : request.getParameter("id");
 		String mealName = request.getParameter("name") == null ? null : request.getParameter("name").equals("") ? null : request.getParameter("name");
 		String seriesName = (request.getParameter("series") == null ||request.getParameter("series").equals("")) ?  "0" : request.getParameter("series");
-		System.out.println(mealId);
-		System.out.println(mealName);
-		System.out.println(seriesName);
+//		System.out.println(mealId);
+//		System.out.println(mealName);
+//		System.out.println(seriesName);
 		MenuBean a = (new MenuBean(Integer.parseInt(mealId),mealName,Integer.parseInt(seriesName)));
-		System.out.println(a.toString());
-		System.out.println("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
+//		System.out.println(a.toString());
+//		System.out.println("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK");
 		List<MenuBean> query =menuServlet.query(new MenuBean(Integer.parseInt(mealId),mealName,Integer.parseInt(seriesName)));
 
-		System.out.println(query.toString());
+//		System.out.println(query.toString());
 		Gson gson = new GsonBuilder().create();
 		String result = gson.toJson(query);
-		System.out.println("result " + result);
+//		System.out.println("result " + result);
 
 		try {
 			response.getWriter().write(result);

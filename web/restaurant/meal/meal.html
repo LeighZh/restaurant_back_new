@@ -100,7 +100,7 @@
                             <th width="40%">操作</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="CLDtbody">
                         </tbody>
                     </table>
                 </div>
@@ -117,7 +117,7 @@
                 <h4 class="modal-title" id="dialogTitle"></h4>
             </div>
             <div class="modal-body">
-                <form method="get" id="dialogUserInfo" class="form-horizontal">
+                <form method="post" id="dialogUserInfo" class="form-horizontal" enctype="multipart/form-data">
                     <div class="form-group">
                         <div class="col-md-9 droppable sortable ui-droppable ui-sortable" style="width: 100%">
                             <div class="form-group draggable ui-draggable dropped">
@@ -203,7 +203,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" id="closeUserInfoDialog" data-dismiss="modal">关闭</button>
                 <button type="button" class="btn btn-primary" onclick="cancelUpload()">取消上传</button>
-                <button type="button" class="btn btn-primary" onclick="saveOrUpdateUserInfo()">存储</button>
+                <button type="button" class="btn btn-primary" onclick="uploadFile()">存储</button>
             </div>
         </div>
     </div>

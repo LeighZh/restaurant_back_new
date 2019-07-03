@@ -14,22 +14,22 @@ import java.util.List;
 
 public class CookingServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		doPost(request, response);
 	}
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
 		CookingServers cs=new CookingServersImpl();
 		String select=request.getParameter("select");
 		String name=request.getParameter("name");
-		System.out.println(select);
+		//System.out.println(select);
 		if(select.equals("add")){
 			String man=cs.add(name);
-			System.out.println(man);
+			//System.out.println(man);
 			response.getWriter().println(man);
 		}else if(select.equals("delete")){
-			System.out.println(name);
+			//System.out.println(name);
 			cs.delete(name);
 			response.getWriter().println(true);
 		}else if(select.equals("update")){
@@ -39,7 +39,7 @@ public class CookingServlet extends HttpServlet {
 			response.getWriter().println(josn);
 		}else{
 			List<VegetableTypeBean> list=cs.query();
-			System.out.println(list.toString());
+			//System.out.println(list.toString());
 			String josn= JSON.toJSONString(list);
 			response.getWriter().println(josn);
 		}
