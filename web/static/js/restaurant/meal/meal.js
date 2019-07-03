@@ -149,7 +149,7 @@ function showEditUser(id) {
                 if(result.length >= 0){
                     $("#dialogUserAccount").val(result[0].mealId)
                     $("#dialogUserName").val(result[0].mealName)
-                    $("#dialogSeries").val(result[0].seriesName)
+                    $("#dialogSeries").val(result[0].mealSeriesId)
                     // $('#problemSubject').html('<option value="' + result[0].subjectid + '">' + seriesName + '</option>').trigger("change");
                     $("#dialogDescribe").val(result[0].mealSummarize)
                     $("#dialogPrice").val(result[0].mealPrice)
