@@ -170,40 +170,40 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="form-group">
-                            <div class="col-md-9 droppable sortable ui-droppable ui-sortable"  style="width: 100%">
-                                <div class="form-group draggable ui-draggable dropped">
-                                    <label class="col-sm-2 control-label">上传图片：</label>
-                                    <div class="col-sm-5">
-                                        <form id="infoLogoForm" enctype='multipart/form-data'>
-                                            <input type="file" id='uploadFile' name="uploadFile" placeholder="请选择文件">
-                                        </form>
-                                    </div>
-                                </div>
-                                <div class="form-group draggable ui-draggable dropped">
-                                    <label class="col-sm-2 control-label">上传进度：</label>
-                                    <div class="col-lg-5"
-                                         style="padding-left: 0; padding-right: 0; margin-bottom: 0;">
-                                        <div class="progress progress-striped active" style="">
-                                            <div id="progressBar" class="progress-bar progress-bar-success"
-                                                 role="progressbar" aria-valuemin="0" aria-valuenow="0"
-                                                 aria-valuemax="100" style="width: 0%"></div>
-                                        </div>
-                                    </div>
-                                    <!-- 显示上传速度 -->
-                                    <div id="showInfo">0KB/s</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <!--<div class="form-group">-->
+                        <!--<div class="form-group">-->
+                            <!--<div class="col-md-9 droppable sortable ui-droppable ui-sortable"  style="width: 100%">-->
+                                <!--<div class="form-group draggable ui-draggable dropped">-->
+                                    <!--<label class="col-sm-2 control-label">上传图片：</label>-->
+                                    <!--<div class="col-sm-5">-->
+                                        <!--<form id="infoLogoForm" enctype='multipart/form-data'>-->
+                                            <!--<input type="file" id='uploadFile' name="uploadFile" placeholder="请选择文件">-->
+                                        <!--</form>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="form-group draggable ui-draggable dropped">-->
+                                    <!--<label class="col-sm-2 control-label">上传进度：</label>-->
+                                    <!--<div class="col-lg-5"-->
+                                         <!--style="padding-left: 0; padding-right: 0; margin-bottom: 0;">-->
+                                        <!--<div class="progress progress-striped active" style="">-->
+                                            <!--<div id="progressBar" class="progress-bar progress-bar-success"-->
+                                                 <!--role="progressbar" aria-valuemin="0" aria-valuenow="0"-->
+                                                 <!--aria-valuemax="100" style="width: 0%"></div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                    <!--&lt;!&ndash; 显示上传速度 &ndash;&gt;-->
+                                    <!--<div id="showInfo">0KB/s</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
                 </form>
             </div>
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-white" id="closeUserInfoDialog" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" onclick="cancelUpload()">取消上传</button>
-                <button type="button" class="btn btn-primary" onclick="uploadFile()">存储</button>
+                <!--<button type="button" class="btn btn-primary" onclick="cancelUpload()">取消上传</button>-->
+                <button type="button" class="btn btn-primary" onclick="saveOrUpdateUserInfo()">存储</button>
             </div>
         </div>
     </div>
@@ -289,7 +289,63 @@
         </div>
     </div>
 </div>
+<div class="modal inmodal fade" id="myModal6" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="dialogFile"></h4>
+            </div>
+            <div class="modal-body">
+                <form method="post" id="userInfo" class="form-horizontal" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <div class="col-md-9 droppable sortable ui-droppable ui-sortable" style="width: 100%">
+                            <div class="form-group draggable ui-draggable dropped">
+                                <label class="col-sm-2 control-label">菜品编号：</label>
+                                <div class="col-sm-5">
+                                    <input id="userAccount" name="dialogUserAccount" type="text"  aria-required="true" aria-invalid="false" class="form-control" placeholder="无需操作">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group">
+                            <div class="col-md-9 droppable sortable ui-droppable ui-sortable"  style="width: 100%">
+                                <div class="form-group draggable ui-draggable dropped">
+                                    <label class="col-sm-2 control-label">上传图片：</label>
+                                    <div class="col-sm-5">
+                                        <form id="infoLogoForm" enctype='multipart/form-data'>
+                                            <input type="file" id='uploadFile' name="uploadFile" placeholder="请选择文件">
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="form-group draggable ui-draggable dropped">
+                                    <label class="col-sm-2 control-label">上传进度：</label>
+                                    <div class="col-lg-5"
+                                         style="padding-left: 0; padding-right: 0; margin-bottom: 0;">
+                                        <div class="progress progress-striped active" style="">
+                                            <div id="progressBar" class="progress-bar progress-bar-success"
+                                                 role="progressbar" aria-valuemin="0" aria-valuenow="0"
+                                                 aria-valuemax="100" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                    <!-- 显示上传速度 -->
+                                    <div id="showInfo">0KB/s</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
 
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" id="closFileDialog" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="cancelUpload()">取消上传</button>
+                <button type="button" class="btn btn-primary" onclick="uploadFile()">存储</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript" src="/static/js/restaurant/meal/meal.js"></script>
 </body>

@@ -44,7 +44,8 @@ function queryUserInfo() {
                 var a = "";
                 a += "<td><button type='button' class='btn btn-primary' onclick='showEditUser(\""+result[i].mealId+"\")' data-toggle='modal' data-target='#myModal5' title='编辑用户' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-pencil-square-o'></i>&nbsp;编辑</button>";
                 a += "<button type='button' class='btn btn-primary' onclick='deleteUser(\""+result[i].mealId+"\")' title='删除用户' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-user-times'></i>&nbsp;删除</button>";
-                a += "<button type='button' class='btn btn-primary' onclick='showDetail(\""+result[i].mealId+"\")' data-toggle='modal' data-target='#resetPassword' title='菜品详情' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-list'></i>&nbsp;详情</button></td>";
+                a += "<button type='button' class='btn btn-primary' onclick='showDetail(\""+result[i].mealId+"\")' data-toggle='modal' data-target='#resetPassword' title='菜品详情' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-list'></i>&nbsp;详情</button>";
+                a += "<button type='button' class='btn btn-primary' onclick='showFile(\""+result[i].mealId+"\")' data-toggle='modal' data-target='#myModal6' title='菜品详情' data-toggle='dropdown' style='margin-right:15px; margin-bottom: -1px;'><i class='fa fa-list'></i>&nbsp;上传图片</button></td>";
                 innerHtml += a;
                 innerHtml += "</tr>";
             }
@@ -54,6 +55,11 @@ function queryUserInfo() {
         }
     })
 }
+
+function showFile(id) {
+    $("#userAccount").val(id);
+}
+
 function indexSeriesSelect() {
     $.ajax({
         type: "POST",
@@ -131,7 +137,7 @@ function showEditUser(id) {
                 if(result.length >= 0){
                     $("#dialogUserAccount").val(result[0].mealId);
                     $("#dialogUserName").val(result[0].mealName);
-                    $("#dialogSeries").val(result[0].seriesName);
+                    $("#dialogSeries").val(result[0].mealSeriesId);
                     // $('#problemSubject').html('<option value="' + result[0].subjectid + '">' + seriesName + '</option>').trigger("change");
                     $("#dialogDescribe").val(result[0].mealSummarize);
                     $("#dialogPrice").val(result[0].mealPrice)
@@ -200,8 +206,9 @@ function saveOrUpdateUserInfo() {
             },
             success: function (result) {
                 if (result) {
-                    uploadFile($("#dialogUserAccount").val());
+                    //uploadFile($("#dialogUserAccount").val());
                    // queryUserInfo();
+                    $('#myModal5').modal('hide');
                     swal("保存成功！", "success");
                 } else {
                     swal("请选择菜系！", result.message, "error");
@@ -298,10 +305,9 @@ function saveOrUpdateUserInfo() {
     var xhr;
 
 //上传文件类
-    function uploadFile(id) {
-        if(id == ""){
-            return;
-        }
+    function uploadFile() {
+        var id =  $("#userAccount").val();
+        $("#userAccount").attr("readonly", true);
         var formData = new FormData();
         formData.append('file', $('#uploadFile')[0].files[0]);
         // if ($('#uploadFile')[0].files[0].size >= 1073741824 * 5)//后面的5表示1G*5=5G 上限为5G 可修改
@@ -329,7 +335,7 @@ function saveOrUpdateUserInfo() {
         //}else{
         //swal("上传失败！", result.message, "error");
         //}
-        saveOrUpdateUserInfo();
+        $('#myModal6').modal('hide');
 
     }
 
