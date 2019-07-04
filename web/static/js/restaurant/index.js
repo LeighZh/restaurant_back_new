@@ -1,122 +1,127 @@
 $(document).ready(function () {
-   getUserName();
+    analyzeProblem();
 });
 
-$(function(){
-    //菜单点击
-    J_iframe
-    $(".J_menuItem").on('click',function(){
-        var url = $(this).attr('href');
-        $("#J_iframe").attr('src',url);
-        return false;
-    });
-
-});
-
-//设置主界面上的用户名
-function getUserName(){
-    $.ajax({
-        url: "/userServlet",
-        data:"judge=getSession",
-        xhrFields: {withCredentials: true},
-        success: function(data){
-            console.log(data)
-            data == "null" ? window.location.href='/login.html' :$('#userName').text(data);
-            //$('#userName').text(data);
-        }
-    });
-}
-
-//注销功能
-$('#a_logout').click(function () {
-    swal({
-            title: "确认注销?",
-            text: "",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "确认",
-            cancelButtonText: "取消",
-            closeOnConfirm: false,
-            closeOnCancel: false
-        },
-        function (isConfirm) {
-            if (isConfirm) {
-                $.ajax({
-                    url: "/userServlet",
-                    data:"judge=loginOut",
-                    xhrFields: {withCredentials: true},
-                    success: function(data){
-                        console.log(data)
-                        window.location.href='/login.html';
-                    }
-                });
-               //
-            }else {
-                swal("已取消", "", "error");
-            }
-        });
-});
-
-//重置弹出框的内容
-function formReset() {
-    $("#resetPassword input").val("");
-    $("#resetPassword input").removeClass("error");
-    $("#resetPassword label.error").remove()
-}
-
-//保存重置的密码
-function saveNewPassword() {
-    if(validform().form()) {
+//对问题进行分析
+function analyzeProblem() {
+    var submitCount =0;
+    var successCount = 0;
+    var formatErrorCount = 0;
+    var wrongAnswerCount = 0;
+    var compileErrorCount = 0;
+    var count = 0;
+    //if(id != null && id != ""){
         $.ajax({
             type: "POST",
-            url: "/userServlet?judge=resetPassword",
-            // contentType: "application/json;charset=UTF-8",
+            url: "/userServlet?judge=getUsers",
             dataType: "json",
-            data:{
-                "password" : $("#newPassword").val(),
-                "name": $('#userName').text()
-            },
+            async:false,
             success:function (result){
-                if(result){
-                    //关闭模态窗口
-                    $('#resetPassword').modal('hide');
-                    swal("修改成功！", "密码已成功修改", "success");
-                }else{
-                    swal("修改失败！", "密码修改失败", "error");
+                console.log(result);
+
+                for(var i = 0; i < result.length; i++){
+                    if(result[i].money == 0){
+                        submitCount++;
+                    }else if(result[i].money < 100 && result[i].money > 0){
+                        successCount++;
+                    }else if(result[i].money < 300 && result[i].money >= 100){
+                        formatErrorCount++;
+                    }else if(result[i].money > 300 && result[i].money <= 500){
+                        wrongAnswerCount++;
+                    }else if(result[i].money > 500 && result[i].money <= 1000){
+                        compileErrorCount++;
+                    }else {
+                        count ++;
+                    }
+
                 }
-            },
-            error:function (e) {
-                console.log(e)
+                // submitCount = result[0].submitCount;
+                // successCount = result[0].successCount;
+                // formatErrorCount = result[0].formatErrorCount;
+                // wrongAnswerCount = result[0].wrongAnswerCount;
+                // compileErrorCount = result[0].compileErrorCount;
+                setEcharts(submitCount,successCount,formatErrorCount,wrongAnswerCount,compileErrorCount,count);
+                $('#id').val("");
             }
         })
-    }
+   // }
+
+
 }
 
-//对重置密码弹窗中的数据进行校验
-function validform() {
-    var icon = "<i class='fa fa-times-circle'></i>";
-    return $("#resetPasswordForm").validate({
-        rules: {
-            newPassword: {
-                required: true,
-                minlength: 6
-            },
-            verifyPassword: {
-                required: true,
-                equalTo: "#newPassword"
+//饼形图设置
+function setEcharts(submitCount,successCount,formatErrorCount,wrongAnswerCount,compileErrorCount,count){
+    //$('echarts-pie-chart').removeAttrs('echarts_instance_');
+    document.getElementById("echarts-pie-chart");
+    var pieChart = echarts.init(document.getElementById("echarts-pie-chart"));
+    var pieoption = {
+        title : {
+            text: '用户消费情况分析',
+            subtext:' 消费情况',
+            x:'center'
+        },
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            orient : 'vertical',
+            x : 'left',
+            data:['0 元 ','< 100 元','100 -- 300 元','300 -- 500 元','500 -- 1000 元','> 1000  元']
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {
+                    show: true,
+                    type: ['pie', 'funnel'],
+                    option: {
+                        funnel: {
+                            x: '25%',
+                            width: '50%',
+                            funnelAlign: 'left',
+                            max: 1548
+                        }
+                    }
+                },
+                restore : {show: true},
+                saveAsImage : {show: true}
             }
         },
-        messages: {
-
-            newPassword: {
-                required: icon + "请填写新密码",
-                minlength: icon + "密码最少为6位"
-            },
-            verifyPassword: {
-                required: icon + "请再次输入新密码",
-                equalTo: icon + "两次密码输入不一致"
+        calculable : true,
+        series : [
+            {
+                name:'消费情况',
+                type:'pie',
+                radius : '55%',
+                center: ['50%', '60%'],
+                data:[
+                    {value:submitCount, name:'0 元 '},
+                    {value:successCount, name:'< 100 元'},
+                    {value: formatErrorCount, name:'100 -- 300 元'},
+                    {value:wrongAnswerCount, name:'300 -- 500 元'},
+                    {value:compileErrorCount,name:'500 -- 1000 元'},
+                    {value:count,name:'>1000 元'}
+                ],
+                itemStyle:{
+                    normal:{
+                        label:{
+                            show: true,
+                            formatter: '{b} : {c} ({d}%)'
+                        },
+                        labelLine :{show:true}
+                    }
+                }
             }
-        }
-    });
+        ]
+    };
+//if(pieoption && typeof pieoption == "object"){
+    pieChart.setOption(pieoption);
+    $(window).resize(pieChart.resize);
+//}
+
 }
+
+

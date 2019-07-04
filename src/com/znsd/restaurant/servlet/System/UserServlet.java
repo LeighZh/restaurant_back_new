@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.znsd.restaurant.MD5Encode;
 import com.znsd.restaurant.bean.order.RecordBean;
 import com.znsd.restaurant.bean.system.UserBean;
 import com.znsd.restaurant.servers.System.UserService;
@@ -21,7 +22,7 @@ import java.util.*;
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("appliaction/JSON;charsex=UTF-8");
@@ -108,6 +109,8 @@ public class UserServlet extends HttpServlet {
 	public void afterRegister(HttpServletRequest request, HttpServletResponse response,UserService userServlet){
 		String name = request.getParameter("name");
 		String password = request.getParameter("password");
+		password = MD5Encode.MD5Encode(password,"utf8");
+		password = MD5Encode.MD5Encode(password,"utf8");
 		UserBean afterRegister = userServlet.afterRegister(name, password);
 		boolean res = false;
 		if(afterRegister != null){
@@ -202,6 +205,10 @@ public class UserServlet extends HttpServlet {
 	public void resetPassword(HttpServletRequest request, HttpServletResponse response,UserService userServlet){
 		String name = request.getParameter("name");
 		String password = request.getParameter("password");
+
+		password = MD5Encode.MD5Encode(password,"utf8");
+		password = MD5Encode.MD5Encode(password,"utf8");
+
 		userServlet.resetPassword(name, password);
 		PrintWriter out;
 
@@ -218,6 +225,8 @@ public class UserServlet extends HttpServlet {
 	public void resetUserPassword(HttpServletRequest request, HttpServletResponse response,UserService userServlet){
 		String name = request.getParameter("id");
 		String password = request.getParameter("newPassword");
+		password = MD5Encode.MD5Encode(password,"utf8");
+		password = MD5Encode.MD5Encode(password,"utf8");
 		userServlet.resetUserPassword(name, password);
 		PrintWriter out;
 		try {
@@ -254,6 +263,8 @@ public class UserServlet extends HttpServlet {
 	public void resetAdminPassword(HttpServletRequest request, HttpServletResponse response,UserService userServlet){
 		String name = request.getParameter("id");
 		String password = request.getParameter("password");
+		password = MD5Encode.MD5Encode(password,"utf8");
+		password = MD5Encode.MD5Encode(password,"utf8");
 		Boolean res = userServlet.resetAdminPassword(Integer.parseInt(name), password);
 		PrintWriter out;
 

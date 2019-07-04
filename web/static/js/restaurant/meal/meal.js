@@ -142,7 +142,6 @@ function showEditUser(id) {
                     $("#dialogDescribe").val(result[0].mealSummarize);
                     $("#dialogPrice").val(result[0].mealPrice)
                 }
-
             }
         })
     }else{

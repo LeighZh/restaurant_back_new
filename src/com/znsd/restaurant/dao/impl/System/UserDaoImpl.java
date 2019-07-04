@@ -48,48 +48,6 @@ public class UserDaoImpl implements UserDao {
 		return false;
 	}
 
-//	public boolean register(UserBean userBean){
-//		Connection connection = DBUtils.getConnection();
-//		PreparedStatement prepare = null;
-//		PreparedStatement prepareTwo = null;
-//		PreparedStatement prepareThree = null;
-//		ResultSet query = null;
-//		try {
-//			prepare = connection.prepareStatement("select userName from user where userName=? and sign='正常' ");
-//			prepare.setString(1, userBean.getUserName());
-//			query = prepare.executeQuery();
-//			if(query.next()){
-//				return true;
-//			}
-//			prepareTwo = connection.prepareStatement("INSERT INTO USER(userName,PASSWORD,createTime,lastTime,number) VALUE(?,?,NOW(),NOW(),?);");
-//			prepareTwo.setString(1, userBean.getUserName());
-//			prepareTwo.setString(2, userBean.getPassword());
-//			prepareTwo.setLong(3, userBean.getNumber());
-//			prepareTwo.execute();
-//			prepareThree = connection.prepareStatement("INSERT INTO user_role VALUE ((SELECT userId FROM USER WHERE userName = ?),1)");
-//			prepareThree.setString(1, userBean.getUserName());
-//			prepareThree.execute();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} finally{
-//			try {
-//				if(query!=null)
-//					query.close();
-//				if(prepare!=null)
-//					prepare.close();
-//				if(prepareTwo!=null)
-//					prepareTwo.close();
-//				if(prepareThree!=null)
-//					prepareThree.close();
-//				if(connection!=null)
-//					connection.close();
-//			} catch (SQLException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//		return false;
-//	}
-	
 	public void resetPassword(String name,String password){
 		Connection connection = DBUtils.getConnection();
 		PreparedStatement prepare = null;
@@ -236,7 +194,8 @@ public class UserDaoImpl implements UserDao {
 		PreparedStatement prepare = null;
 		ResultSet query = null;
 		try {
-			prepare = connection.prepareStatement("SELECT id,loginName,createTime,trueName,phone,email,address,money FROM user WHERE loginName = ?");
+			prepare = connection.prepareStatement("SELECT id,loginName,createTime,trueName,phone,email,address,SUM(orderPrice) money \n" +
+					"FROM USER,mainorder WHERE mainorder.userId = user.id and loginName = ? GROUP BY user.id ORDER BY money DESC");
 			prepare.setString(1, name);
 			query = prepare.executeQuery();
 			List<UserBean> list = new ArrayList<UserBean>();
@@ -302,7 +261,8 @@ public class UserDaoImpl implements UserDao {
 		Connection connection = DBUtils.getConnection();
 		PreparedStatement prepare = null;
 		ResultSet query = null;
-		String sql = "SELECT id,loginName,createTime,trueName,phone,email,address,money FROM USER where money >= 0 ";
+		String sql = "SELECT id,loginName,createTime,trueName,phone,email,address,SUM(orderPrice) money \n" +
+				"FROM USER left join mainorder on mainorder.userId = user.id WHERE user.money >= 0 ";
 		if(user.getUserId() != 0){
 		    sql = sql + " and id = "+ user.getUserId();
 		}
@@ -327,6 +287,9 @@ public class UserDaoImpl implements UserDao {
         if(user.getMoney() != -1 ){
             sql = sql +  " and money <= " + user.getMoney();
         }
+
+        sql += " GROUP BY user.id ORDER BY money DESC";
+
         System.out.println(sql);
 
 		try {

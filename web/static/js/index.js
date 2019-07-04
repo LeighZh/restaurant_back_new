@@ -4,7 +4,7 @@ $(document).ready(function () {
 
 $(function(){
     //菜单点击
-    J_iframe
+    J_iframe;
     $(".J_menuItem").on('click',function(){
         var url = $(this).attr('href');
         $("#J_iframe").attr('src',url);
@@ -20,13 +20,12 @@ function getUserName(){
         data:"judge=getSession",
         xhrFields: {withCredentials: true},
         success: function(data){
-            console.log(data)
+            console.log(data);
             data == "null" ? window.location.href='/restaurant/login.html' :$('#userName').text(data);
             //$('#userName').text(data);
         }
     });
 }
-
 
 //注销功能
 $('#a_logout').click(function () {
@@ -48,7 +47,7 @@ $('#a_logout').click(function () {
                     data:"judge=loginOut",
                     xhrFields: {withCredentials: true},
                     success: function(data){
-                        console.log(data)
+                        console.log(data);
                         window.location.href='/login.html';
                     }
                 });
